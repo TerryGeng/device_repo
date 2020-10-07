@@ -1,0 +1,43 @@
+digraph G {
+    //layout=fdp;
+    node [style="rounded,filled",color=black,shape=box,fillcolor=white];
+    subgraph clusterRs{
+        subgraph clusterR1 {
+            label="DeviceRack";
+            AWG1;
+            AWG2;
+            AWG3;
+        }
+        subgraph clusterR2 {
+            label="DeviceRack";
+            DC1;
+            DC2;
+            DC3;
+        }
+        subgraph clusterR3 {
+            label="DeviceRack";
+            Trigger;
+            "...";
+        }
+    }
+
+    DeviceRepo [shape=ellipse, fillcolor=grey];
+
+    subgraph clusterC{
+        label="Client";
+        DeviceAccess;
+    }
+
+    DeviceAccess -> DeviceRepo;
+
+    DeviceRepo -> AWG1;
+    DeviceRepo -> AWG2;
+    DeviceRepo -> AWG3;
+
+    DeviceRepo -> DC1;
+    DeviceRepo -> DC2;
+    DeviceRepo -> DC3;
+
+    DeviceRepo -> Trigger;
+    DeviceRepo -> "...";
+}
