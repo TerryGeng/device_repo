@@ -1,9 +1,8 @@
-import sys
 import time
 import unittest.mock
 import threading
-
 import pytest
+import Ice
 
 from device_repo.utils import get_logger
 
@@ -53,7 +52,7 @@ class TestDummy:
         rack.ic.shutdown()
         host.ic.shutdown()
 
-    def test_auto_remove(self):
+    def test_device_auto_remove(self):
         host = self.start_host()
         access = self.get_access()
         assert len(access.list_device()) == 0
@@ -78,6 +77,10 @@ class TestDummy:
         assert dev.get_data() == b'Hello world!'
 
         access.release_device('Dummy01')
+
+        with pytest.raises(Ice.ObjectNotExistException):
+            dev.get_data()
+
         rack.ic.shutdown()
         host.ic.shutdown()
 

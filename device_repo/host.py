@@ -59,9 +59,9 @@ class DeviceRepoI(DeviceRepo):
                 self.logger.info(f"Client {current.con.toString()} attempts to reacquire"
                                  f" device {_id}.")
             else:
-                self.logger.info(f"Client {current.con.toString()} attempted to "
-                                 f"acquire occupied device {_id} of "
-                                 "others.")
+                self.logger.warning(f"Client {current.con.toString()} attempted to "
+                                    f"acquire occupied device {_id} of "
+                                    "others.")
             raise DeviceOccupiedException
 
         self.device_user_map[_id] = current.con
@@ -84,16 +84,18 @@ class DeviceRepoI(DeviceRepo):
             self.devices[_id].rack.release_device_prx(_id)
             del self.device_user_map[_id]
         else:
-            self.logger.info(f"Client {current.con.toString()} attempted to "
-                             f"release occupied device {_id} of "
-                             "others.")
+            self.logger.warning(f"Client {current.con.toString()} attempted to "
+                                f"release occupied device {_id} of "
+                                "others.")
             raise DeviceOccupiedException
 
     def add_device(self, _id, _type, rack, token, current=None):
         rack = rack.ice_context({'token': token})
         try:
             assert(rack.check_status(_id) == DeviceStatus.Idle)
-        except Exception:
+        except Exception as e:
+            self.logger.error("Error when adding device: ")
+            self.logger.error(e)
             return False
 
         self.logger.info(f"Device added: {_id}({_type}) from "

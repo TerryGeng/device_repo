@@ -1,6 +1,16 @@
-from driver.dummy import DummyDev
-from device_repo import DeviceRack
+from device_repo import DeviceRack, DummyDeviceTemplate, DeviceType
 from device_repo.utils import get_logger, get_rack_argv_parser
+
+
+class DummyDev(DummyDeviceTemplate):
+    def __init__(self):
+        pass
+
+    def get_type(self, current=None):
+        return DeviceType.Dummy
+
+    def get_data(self, current=None):
+        return b"Hello world!"
 
 
 def start_dummy_rack(host, port, start_immediately=True):
