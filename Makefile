@@ -6,6 +6,7 @@ SED = sed -i
 ifeq ($(OS),Windows_NT)
 	PYTHON := ./venv/Scripts/python.exe
 	SLICE2PY := ./venv/Scripts/slice2py.exe
+	PYTEST := ./venv/Scripts/pytest.exe
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Linux)
