@@ -23,22 +23,31 @@ Create a virtual environment(called `venv`) by
 python -m venv venv
 ```
 
+2. Activate the `venv` just created by (on Linux)
+```bash
+source venv/bin/activate
+```
+For Windows users, type
+```
+.\venv\Scripts\activate
+```
+
 2. Install device_repo to `venv` by
 ```bash
-venv/bin/python device_repo/setup.py install
+python device_repo/setup.py install
 ```
 
 ## Usage
 
-1. On the host PC: start the device repo host.
+1. On the host PC: start the device repo host. (Don't forget activate `venv`)
 ```bash
-venv/bin/devicerepo
+devicerepo
 ```
    By default, it will listen on port 20201.
    
 1. On the PC which devices are connected to: start the device rack.
 ```bash
-venv/bin/python racks/dummy_rack.py -h 127.0.0.1
+python racks/dummy_rack.py -h 127.0.0.1
 ```
    where 127.0.0.1 is the ip address of the host PC.
    
