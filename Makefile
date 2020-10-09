@@ -1,18 +1,19 @@
 PYTHON = venv/bin/python
 PYTEST = venv/bin/python -m pytest
 SLICE2PY = venv/bin/slice2py
-SED = sed
+SED = sed -i
 
 ifeq ($(OS),Windows_NT)
-	PYTHON := .\venv\Scripts\python.exe
+	PYTHON := ./venv/Scripts/python.exe
+	SLICE2PY := ./venv/Scripts/slice2py.exe
 else
-    UNAME_S := $(shell uname -s)
-    ifeq ($(UNAME_S),Linux)
-    	# essentially do nothing
-    endif
-    ifeq ($(UNAME_S),Darwin)
-    	SED := sed -i ""
-    endif
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Linux)
+		# essentially do nothing
+	endif
+	ifeq ($(UNAME_S),Darwin)
+		SED := sed -i ""
+	endif
 endif
 
 .PHONY: all clean test build
