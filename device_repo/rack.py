@@ -15,6 +15,19 @@ from .device_repo_ice import (Device, DevicePrx, DeviceRack, DeviceRackPrx,
 DeviceEntry = namedtuple('DeviceEntry', ['device', 'id', 'type'])
 
 
+def log_invoke_evt(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if isinstance(args[-1], Ice.Current):
+            current = args[-1]
+            args_str = str(args[1:-1])
+            logging.info(f"{f.__name__} invoked by {current.con}, with"
+                         f"parameters {args_str}")
+
+        f(*args, **kwargs)
+        return wrapper
+
+
 class DeviceRackI(DeviceRack):
     def __init__(self, name, host_address, host_port, logger=None):
         self.logger = logger if logger else logging.getLogger()

@@ -1,11 +1,12 @@
 import Ice
 
 from .device_repo_ice import (DeviceRepoPrx, DeviceStatus, DeviceType,
-                              DummyDevicePrx, AWGPrx)
+                              DummyDevicePrx, AWGPrx, PSGPrx)
 
 DEVICE_MAP = {
     DeviceType.Dummy: DummyDevicePrx,
-    DeviceType.ArbitaryWaveformGenerator: AWGPrx
+    DeviceType.ArbitraryWaveformGenerator: AWGPrx,
+    DeviceType.ParametricSignalGenerator: PSGPrx
 }
 
 

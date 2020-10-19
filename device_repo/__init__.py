@@ -1,4 +1,4 @@
-from .device_repo_ice import AWG_ice, Dummy_ice, device_repo_ice
+from .device_repo_ice import device_repo_ice,AWG_ice, Dummy_ice, PSG_ice, DCSource_ice
 from .access import DeviceRepoAccess
 from .rack import DeviceRackI as DeviceRack
 
@@ -8,7 +8,12 @@ DeviceStatus = device_repo_ice._M_device_repo_ice.DeviceStatus
 DeviceOccupiedException = device_repo_ice._M_device_repo_ice.DeviceOccupiedException
 UnknownDeviceException = device_repo_ice._M_device_repo_ice.UnknownDeviceException
 
-AWGTemplate = AWG_ice._M_device_repo_ice.AWG
-AWG = AWG_ice._M_device_repo_ice.AWGPrx
 DummyDeviceTemplate = Dummy_ice._M_device_repo_ice.DummyDevice
 DummyDevice = Dummy_ice._M_device_repo_ice.DummyDevicePrx
+
+AWGTemplate = AWG_ice._M_device_repo_ice.AWG
+AWG = AWG_ice._M_device_repo_ice.AWGPrx
+PSGTemplate = PSG_ice._M_device_repo_ice.PSG
+PSG = PSG_ice._M_device_repo_ice.PSGPrx
+DCSourceTemplate = DCSource_ice._M_device_repo_ice.DCSource
+DCSource = DCSource_ice._M_device_repo_ice.DCSourcePrx

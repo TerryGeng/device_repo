@@ -33,89 +33,65 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice.AWGPrx = Ice.createTempClass()
     class AWGPrx(_M_device_repo_ice.DevicePrx):
 
-        def write_raw_waveform(self, channel, amplitude, waveform, context=None):
-            return _M_device_repo_ice.AWG._op_write_raw_waveform.invoke(self, ((channel, amplitude, waveform), context))
+        def write_raw_waveform(self, amplitude, waveform, context=None):
+            return _M_device_repo_ice.AWG._op_write_raw_waveform.invoke(self, ((amplitude, waveform), context))
 
-        def write_raw_waveformAsync(self, channel, amplitude, waveform, context=None):
-            return _M_device_repo_ice.AWG._op_write_raw_waveform.invokeAsync(self, ((channel, amplitude, waveform), context))
+        def write_raw_waveformAsync(self, amplitude, waveform, context=None):
+            return _M_device_repo_ice.AWG._op_write_raw_waveform.invokeAsync(self, ((amplitude, waveform), context))
 
-        def begin_write_raw_waveform(self, channel, amplitude, waveform, _response=None, _ex=None, _sent=None, context=None):
-            return _M_device_repo_ice.AWG._op_write_raw_waveform.begin(self, ((channel, amplitude, waveform), _response, _ex, _sent, context))
+        def begin_write_raw_waveform(self, amplitude, waveform, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.AWG._op_write_raw_waveform.begin(self, ((amplitude, waveform), _response, _ex, _sent, context))
 
         def end_write_raw_waveform(self, _r):
             return _M_device_repo_ice.AWG._op_write_raw_waveform.end(self, _r)
 
-        def set_channel_offset(self, channel, amplitude, offset_voltage, context=None):
-            return _M_device_repo_ice.AWG._op_set_channel_offset.invoke(self, ((channel, amplitude, offset_voltage), context))
+        def set_offset(self, amplitude, offset_voltage, context=None):
+            return _M_device_repo_ice.AWG._op_set_offset.invoke(self, ((amplitude, offset_voltage), context))
 
-        def set_channel_offsetAsync(self, channel, amplitude, offset_voltage, context=None):
-            return _M_device_repo_ice.AWG._op_set_channel_offset.invokeAsync(self, ((channel, amplitude, offset_voltage), context))
+        def set_offsetAsync(self, amplitude, offset_voltage, context=None):
+            return _M_device_repo_ice.AWG._op_set_offset.invokeAsync(self, ((amplitude, offset_voltage), context))
 
-        def begin_set_channel_offset(self, channel, amplitude, offset_voltage, _response=None, _ex=None, _sent=None, context=None):
-            return _M_device_repo_ice.AWG._op_set_channel_offset.begin(self, ((channel, amplitude, offset_voltage), _response, _ex, _sent, context))
+        def begin_set_offset(self, amplitude, offset_voltage, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.AWG._op_set_offset.begin(self, ((amplitude, offset_voltage), _response, _ex, _sent, context))
 
-        def end_set_channel_offset(self, _r):
-            return _M_device_repo_ice.AWG._op_set_channel_offset.end(self, _r)
+        def end_set_offset(self, _r):
+            return _M_device_repo_ice.AWG._op_set_offset.end(self, _r)
 
-        def set_channel_amplitude(self, channel, amp_in_volts, context=None):
-            return _M_device_repo_ice.AWG._op_set_channel_amplitude.invoke(self, ((channel, amp_in_volts), context))
+        def set_amplitude(self, amp_in_volts, context=None):
+            return _M_device_repo_ice.AWG._op_set_amplitude.invoke(self, ((amp_in_volts, ), context))
 
-        def set_channel_amplitudeAsync(self, channel, amp_in_volts, context=None):
-            return _M_device_repo_ice.AWG._op_set_channel_amplitude.invokeAsync(self, ((channel, amp_in_volts), context))
+        def set_amplitudeAsync(self, amp_in_volts, context=None):
+            return _M_device_repo_ice.AWG._op_set_amplitude.invokeAsync(self, ((amp_in_volts, ), context))
 
-        def begin_set_channel_amplitude(self, channel, amp_in_volts, _response=None, _ex=None, _sent=None, context=None):
-            return _M_device_repo_ice.AWG._op_set_channel_amplitude.begin(self, ((channel, amp_in_volts), _response, _ex, _sent, context))
+        def begin_set_amplitude(self, amp_in_volts, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.AWG._op_set_amplitude.begin(self, ((amp_in_volts, ), _response, _ex, _sent, context))
 
-        def end_set_channel_amplitude(self, _r):
-            return _M_device_repo_ice.AWG._op_set_channel_amplitude.end(self, _r)
+        def end_set_amplitude(self, _r):
+            return _M_device_repo_ice.AWG._op_set_amplitude.end(self, _r)
 
-        def stop_all(self, context=None):
-            return _M_device_repo_ice.AWG._op_stop_all.invoke(self, ((), context))
+        def stop(self, context=None):
+            return _M_device_repo_ice.AWG._op_stop.invoke(self, ((), context))
 
-        def stop_allAsync(self, context=None):
-            return _M_device_repo_ice.AWG._op_stop_all.invokeAsync(self, ((), context))
+        def stopAsync(self, context=None):
+            return _M_device_repo_ice.AWG._op_stop.invokeAsync(self, ((), context))
 
-        def begin_stop_all(self, _response=None, _ex=None, _sent=None, context=None):
-            return _M_device_repo_ice.AWG._op_stop_all.begin(self, ((), _response, _ex, _sent, context))
+        def begin_stop(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.AWG._op_stop.begin(self, ((), _response, _ex, _sent, context))
 
-        def end_stop_all(self, _r):
-            return _M_device_repo_ice.AWG._op_stop_all.end(self, _r)
+        def end_stop(self, _r):
+            return _M_device_repo_ice.AWG._op_stop.end(self, _r)
 
-        def run_all(self, context=None):
-            return _M_device_repo_ice.AWG._op_run_all.invoke(self, ((), context))
+        def run(self, context=None):
+            return _M_device_repo_ice.AWG._op_run.invoke(self, ((), context))
 
-        def run_allAsync(self, context=None):
-            return _M_device_repo_ice.AWG._op_run_all.invokeAsync(self, ((), context))
+        def runAsync(self, context=None):
+            return _M_device_repo_ice.AWG._op_run.invokeAsync(self, ((), context))
 
-        def begin_run_all(self, _response=None, _ex=None, _sent=None, context=None):
-            return _M_device_repo_ice.AWG._op_run_all.begin(self, ((), _response, _ex, _sent, context))
+        def begin_run(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.AWG._op_run.begin(self, ((), _response, _ex, _sent, context))
 
-        def end_run_all(self, _r):
-            return _M_device_repo_ice.AWG._op_run_all.end(self, _r)
-
-        def stop_channel(self, channel, context=None):
-            return _M_device_repo_ice.AWG._op_stop_channel.invoke(self, ((channel, ), context))
-
-        def stop_channelAsync(self, channel, context=None):
-            return _M_device_repo_ice.AWG._op_stop_channel.invokeAsync(self, ((channel, ), context))
-
-        def begin_stop_channel(self, channel, _response=None, _ex=None, _sent=None, context=None):
-            return _M_device_repo_ice.AWG._op_stop_channel.begin(self, ((channel, ), _response, _ex, _sent, context))
-
-        def end_stop_channel(self, _r):
-            return _M_device_repo_ice.AWG._op_stop_channel.end(self, _r)
-
-        def run_channel(self, channel, context=None):
-            return _M_device_repo_ice.AWG._op_run_channel.invoke(self, ((channel, ), context))
-
-        def run_channelAsync(self, channel, context=None):
-            return _M_device_repo_ice.AWG._op_run_channel.invokeAsync(self, ((channel, ), context))
-
-        def begin_run_channel(self, channel, _response=None, _ex=None, _sent=None, context=None):
-            return _M_device_repo_ice.AWG._op_run_channel.begin(self, ((channel, ), _response, _ex, _sent, context))
-
-        def end_run_channel(self, _r):
-            return _M_device_repo_ice.AWG._op_run_channel.end(self, _r)
+        def end_run(self, _r):
+            return _M_device_repo_ice.AWG._op_run.end(self, _r)
 
         @staticmethod
         def checkedCast(proxy, facetOrContext=None, context=None):
@@ -146,26 +122,20 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
         def ice_staticId():
             return '::device_repo_ice::AWG'
 
-        def write_raw_waveform(self, channel, amplitude, waveform, current=None):
+        def write_raw_waveform(self, amplitude, waveform, current=None):
             raise NotImplementedError("servant method 'write_raw_waveform' not implemented")
 
-        def set_channel_offset(self, channel, amplitude, offset_voltage, current=None):
-            raise NotImplementedError("servant method 'set_channel_offset' not implemented")
+        def set_offset(self, amplitude, offset_voltage, current=None):
+            raise NotImplementedError("servant method 'set_offset' not implemented")
 
-        def set_channel_amplitude(self, channel, amp_in_volts, current=None):
-            raise NotImplementedError("servant method 'set_channel_amplitude' not implemented")
+        def set_amplitude(self, amp_in_volts, current=None):
+            raise NotImplementedError("servant method 'set_amplitude' not implemented")
 
-        def stop_all(self, current=None):
-            raise NotImplementedError("servant method 'stop_all' not implemented")
+        def stop(self, current=None):
+            raise NotImplementedError("servant method 'stop' not implemented")
 
-        def run_all(self, current=None):
-            raise NotImplementedError("servant method 'run_all' not implemented")
-
-        def stop_channel(self, channel, current=None):
-            raise NotImplementedError("servant method 'stop_channel' not implemented")
-
-        def run_channel(self, channel, current=None):
-            raise NotImplementedError("servant method 'run_channel' not implemented")
+        def run(self, current=None):
+            raise NotImplementedError("servant method 'run' not implemented")
 
         def __str__(self):
             return IcePy.stringify(self, _M_device_repo_ice._t_AWGDisp)
@@ -175,13 +145,11 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice._t_AWGDisp = IcePy.defineClass('::device_repo_ice::AWG', AWG, (), None, (_M_device_repo_ice._t_DeviceDisp,))
     AWG._ice_type = _M_device_repo_ice._t_AWGDisp
 
-    AWG._op_write_raw_waveform = IcePy.Operation('write_raw_waveform', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_int, False, 0), ((), IcePy._t_double, False, 0), ((), _M_device_repo_ice._t_RawWaveform, False, 0)), (), None, ())
-    AWG._op_set_channel_offset = IcePy.Operation('set_channel_offset', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_int, False, 0), ((), IcePy._t_double, False, 0), ((), IcePy._t_double, False, 0)), (), None, ())
-    AWG._op_set_channel_amplitude = IcePy.Operation('set_channel_amplitude', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_int, False, 0), ((), IcePy._t_double, False, 0)), (), None, ())
-    AWG._op_stop_all = IcePy.Operation('stop_all', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
-    AWG._op_run_all = IcePy.Operation('run_all', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
-    AWG._op_stop_channel = IcePy.Operation('stop_channel', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_int, False, 0),), (), None, ())
-    AWG._op_run_channel = IcePy.Operation('run_channel', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_int, False, 0),), (), None, ())
+    AWG._op_write_raw_waveform = IcePy.Operation('write_raw_waveform', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_double, False, 0), ((), _M_device_repo_ice._t_RawWaveform, False, 0)), (), None, ())
+    AWG._op_set_offset = IcePy.Operation('set_offset', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_double, False, 0), ((), IcePy._t_double, False, 0)), (), None, ())
+    AWG._op_set_amplitude = IcePy.Operation('set_amplitude', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_double, False, 0),), (), None, ())
+    AWG._op_stop = IcePy.Operation('stop', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
+    AWG._op_run = IcePy.Operation('run', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
 
     _M_device_repo_ice.AWG = AWG
     del AWG

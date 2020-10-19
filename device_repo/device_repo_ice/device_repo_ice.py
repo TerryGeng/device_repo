@@ -35,12 +35,12 @@ if 'DeviceType' not in _M_device_repo_ice.__dict__:
         valueOf = classmethod(valueOf)
 
     DeviceType.Dummy = DeviceType("Dummy", 0)
-    DeviceType.ArbitaryWaveformGenerator = DeviceType("ArbitaryWaveformGenerator", 1)
-    DeviceType.AnalogSignalGenerator = DeviceType("AnalogSignalGenerator", 2)
+    DeviceType.ArbitraryWaveformGenerator = DeviceType("ArbitraryWaveformGenerator", 1)
+    DeviceType.ParametricSignalGenerator = DeviceType("ParametricSignalGenerator", 2)
     DeviceType.Acquisition = DeviceType("Acquisition", 3)
     DeviceType.VectorNetworkAnalyzer = DeviceType("VectorNetworkAnalyzer", 4)
     DeviceType.DelayGenerator = DeviceType("DelayGenerator", 5)
-    DeviceType._enumerators = { 0:DeviceType.Dummy, 1:DeviceType.ArbitaryWaveformGenerator, 2:DeviceType.AnalogSignalGenerator, 3:DeviceType.Acquisition, 4:DeviceType.VectorNetworkAnalyzer, 5:DeviceType.DelayGenerator }
+    DeviceType._enumerators = { 0:DeviceType.Dummy, 1:DeviceType.ArbitraryWaveformGenerator, 2:DeviceType.ParametricSignalGenerator, 3:DeviceType.Acquisition, 4:DeviceType.VectorNetworkAnalyzer, 5:DeviceType.DelayGenerator }
 
     _M_device_repo_ice._t_DeviceType = IcePy.defineEnum('::device_repo_ice::DeviceType', DeviceType, (), DeviceType._enumerators)
 

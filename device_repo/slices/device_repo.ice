@@ -3,8 +3,8 @@
 module device_repo_ice {
     enum DeviceType {
         Dummy,
-        ArbitaryWaveformGenerator,
-        AnalogSignalGenerator,
+        ArbitraryWaveformGenerator,
+        ParametricSignalGenerator,
         Acquisition,
         VectorNetworkAnalyzer,
         DelayGenerator
