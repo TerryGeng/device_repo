@@ -3,6 +3,7 @@ import time
 from typing import Dict
 from collections import namedtuple
 from secrets import token_hex
+from functools import wraps
 
 import Ice
 
@@ -25,7 +26,7 @@ def log_invoke_evt(f):
                          f"parameters {args_str}")
 
         f(*args, **kwargs)
-        return wrapper
+    return wrapper
 
 
 class DeviceRackI(DeviceRack):
