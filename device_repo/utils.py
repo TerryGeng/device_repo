@@ -28,9 +28,9 @@ def get_rack_argv_parser(description):
     parser = argparse.ArgumentParser(
         description=description)
 
-    parser.add_argument("-h", "--host", dest="host", type=str, default="127.0.0.1",
+    parser.add_argument("--host", dest="host", type=str, default="127.0.0.1",
                         help="address of the device repo host")
-    parser.add_argument("-p", "--port", dest="port", type=int, default=20201,
+    parser.add_argument("--port", dest="port", type=int, default=20201,
                         help="port of the device repo host")
 
     return parser
