@@ -24,7 +24,7 @@ class PSG(PSGTemplate):
 
     @log_invoke_evt
     def get_frequency(self, current=None):
-        return self.dev.query(f":FREQ?")
+        return float(self.dev.query(f":FREQ?"))
 
     @log_invoke_evt
     def set_power(self, amp_in_dbm, current=None):
@@ -33,7 +33,7 @@ class PSG(PSGTemplate):
 
     @log_invoke_evt
     def get_power(self, current=None):
-        return self.dev.query(f":POWER?")
+        return float(self.dev.query(f":POWER?"))
 
     @log_invoke_evt
     def run(self, current=None):
