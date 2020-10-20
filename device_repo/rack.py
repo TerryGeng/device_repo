@@ -3,7 +3,6 @@ import time
 from typing import Dict
 from collections import namedtuple
 from secrets import token_hex
-from functools import wraps
 
 import Ice
 
@@ -14,21 +13,6 @@ from .device_repo_ice import (Device, DevicePrx, DeviceRack, DeviceRackPrx,
 
 
 DeviceEntry = namedtuple('DeviceEntry', ['device', 'id', 'type'])
-
-logger = logging.getLogger("device_repo")
-
-
-def log_invoke_evt(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        if isinstance(args[-1], Ice.Current):
-            current = args[-1]
-            args_str = str(args[1:-1])
-            logger.info(f"{f.__name__} invoked by {current.con}, with"
-                        f"parameters {args_str}")
-
-        return f(*args, **kwargs)
-    return wrapper
 
 
 class DeviceRackI(DeviceRack):

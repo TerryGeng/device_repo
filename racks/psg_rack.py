@@ -2,8 +2,7 @@ import logging
 import Ice
 
 from device_repo import PSGTemplate, DeviceRack, DeviceType
-from device_repo.utils import get_logger, get_rack_argv_parser
-from device_repo.rack import log_invoke_evt
+from device_repo.utils import get_logger, get_rack_argv_parser, log_invoke_evt
 
 import pyvisa
 
@@ -67,7 +66,7 @@ if __name__ == "__main__":
 
     for name, addr in name_address_pairs:
         identifier = f"PSG_{name}"
-        logging.info(f"Initializing {identifier} at {addr}...")
+        logger.info(f"Initializing {identifier} at {addr}...")
 
         psg = PSG(name, addr)
         rack.load_device(identifier, psg)

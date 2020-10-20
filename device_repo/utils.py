@@ -1,4 +1,7 @@
 import logging
+from functools import wraps
+
+import IcePy
 
 logger = None
 
@@ -34,3 +37,16 @@ def get_rack_argv_parser(description):
                         help="port of the device repo host")
 
     return parser
+
+
+def log_invoke_evt(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if isinstance(args[-1], IcePy.Current):
+            current = args[-1]
+            args_str = str(args[1:-1])
+            get_logger().info(f"{f.__name__} invoked by {current.con}, with"
+                              f"parameters {args_str}")
+
+        return f(*args, **kwargs)
+    return wrapper

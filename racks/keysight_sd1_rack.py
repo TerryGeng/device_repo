@@ -3,8 +3,7 @@ import Ice
 import numpy as np
 
 from device_repo import AWGTemplate, DeviceRack, DeviceType
-from device_repo.utils import get_logger, get_rack_argv_parser
-from device_repo.rack import log_invoke_evt
+from device_repo.utils import get_logger, get_rack_argv_parser, log_invoke_evt
 from driver.keysight_sd1 import (
     SD_AOU, SD_Wave, SD_Waveshapes, SD_TriggerExternalSources,
     SD_TriggerBehaviors, SD_WaveformTypes, SD_TriggerModes)
@@ -101,7 +100,7 @@ if __name__ == "__main__":
         chasis, slot = awg
         for channel in [1, 2, 3, 4]:
             identifier = f"KeysightM3202A_C{chasis}_S{slot}_CH_{channel}"
-            logging.info(f"Initializing {identifier}...")
+            logger.info(f"Initializing {identifier}...")
             keysight = Keysight_M3202A(chasis, slot, channel)
             rack.load_device(identifier, keysight)
 
