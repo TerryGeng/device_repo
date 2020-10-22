@@ -45,7 +45,7 @@ def log_invoke_evt(f):
         if isinstance(args[-1], IcePy.Current):
             current = args[-1]
             args_str = str(args[1:-1])
-            get_logger().info(f"{f.__name__} invoked by {current.con}, with"
+            get_logger().info(f"{f.__name__} invoked by {current.con.toString()}, with "
                               f"parameters {args_str}")
 
         return f(*args, **kwargs)

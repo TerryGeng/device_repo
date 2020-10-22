@@ -1,6 +1,3 @@
-import logging
-import Ice
-
 from device_repo import PSGTemplate, DeviceRack, DeviceType
 from device_repo.utils import get_logger, get_rack_argv_parser, log_invoke_evt
 
