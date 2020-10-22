@@ -21,6 +21,7 @@ class DeviceRepoI(DeviceRepo):
 
         self.devices = {}
         self.device_user_map = {}
+        self.active_prx_map = {}
 
         self.shutting_down = False
 
@@ -31,6 +32,16 @@ class DeviceRepoI(DeviceRepo):
         self.register_client(current.con)
 
         return [DeviceEntry(ent.id, ent.type) for ent in self.devices.values()]
+
+    def list_acquired_devices(self, current=None) -> List[DeviceEntry]:
+        self.register_client(current.con)
+
+        ret = []
+        for _id, con in self.device_user_map.items():
+            if con == current.con:
+                ret.append(DeviceEntry(_id, self.devices[_id].type))
+
+        return ret
 
     def get_device_type(self, _id, current=None) -> DeviceType:
         self.register_client(current.con)
@@ -62,12 +73,14 @@ class DeviceRepoI(DeviceRepo):
                 self.logger.warning(f"Client {current.con.toString()} attempted to "
                                     f"acquire occupied device {_id} of "
                                     "others.")
-            raise DeviceOccupiedException
+                raise DeviceOccupiedException
 
         self.device_user_map[_id] = current.con
 
         self.logger.info(f"Client {current.con.toString()} acquired device {_id}.")
-        return self.devices[_id].rack.get_device_prx(_id)
+        prx = self.devices[_id].rack.get_device_prx(_id)
+        self.active_prx_map[_id] = prx
+        return prx
 
     def release_device(self, _id, current=None):
         self.register_client(current.con)
@@ -83,6 +96,7 @@ class DeviceRepoI(DeviceRepo):
                              f" {_id}.")
             self.devices[_id].rack.release_device_prx(_id)
             del self.device_user_map[_id]
+            del self.active_prx_map[_id]
         else:
             self.logger.warning(f"Client {current.con.toString()} attempted to "
                                 f"release occupied device {_id} of "
@@ -115,6 +129,7 @@ class DeviceRepoI(DeviceRepo):
             for dev in device_to_remove:
                 if dev.id in self.device_user_map:
                     del self.device_user_map[dev.id]
+                    del self.active_prx_map[dev.id]
                 del self.devices[dev.id]
                 self.logger.warning(f"Lost connection with device {dev.id}.")
 
@@ -129,6 +144,7 @@ class DeviceRepoI(DeviceRepo):
             self.logger.info(f"Automatically release device {dev}.")
             self.devices[dev].rack.release_device_prx(dev)
             del self.device_user_map[dev]
+            del self.active_prx_map[dev]
 
     def start(self):
         ice_props = Ice.createProperties()

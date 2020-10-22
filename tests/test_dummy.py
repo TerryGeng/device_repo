@@ -45,7 +45,7 @@ class TestDummy:
         rack = self.start_dummy_rack()
 
         dev_list = access.list_device()
-        assert len(dev_list) == 1
+        assert len(dev_list) == 3
         assert dev_list[0].id == 'Dummy01'
         assert access.get_device_status('Dummy01') == DeviceStatus.Idle
 
@@ -59,7 +59,7 @@ class TestDummy:
         rack = self.start_dummy_rack()
 
         dev_list = access.list_device()
-        assert len(dev_list) == 1
+        assert len(dev_list) == 3
 
         rack.ic.shutdown()
         time.sleep(0.2)
@@ -71,12 +71,22 @@ class TestDummy:
         rack = self.start_dummy_rack()
         access = self.get_access()
         dev = access.get_device('Dummy01')
+        dev_ = access.get_device('Dummy01')
+
+        assert dev == dev_
 
         from device_repo import DummyDevice
         assert isinstance(dev, DummyDevice)
-        assert dev.get_data() == b'Hello world!'
+        assert dev.get_data() == b'Dummy data 1'
 
         access.release_device('Dummy01')
+
+        with pytest.raises(Ice.ObjectNotExistException):
+            dev.get_data()
+
+        dev = access.get_device('Dummy01')
+        assert dev.get_data() == b'Dummy data 1'
+        access.release_device(dev)
 
         with pytest.raises(Ice.ObjectNotExistException):
             dev.get_data()
@@ -107,7 +117,7 @@ class TestDummy:
         assert 'Dummy01' not in host.device_user_map
 
         dev = access2.get_device('Dummy01')
-        assert dev.get_data() == b'Hello world!'
+        assert dev.get_data() == b'Dummy data 1'
 
         rack.ic.shutdown()
         host.ic.shutdown()
@@ -144,7 +154,37 @@ class TestDummy:
         time.sleep(2)
 
         access = self.get_access()
-        assert len(access.list_device()) == 1
+        assert len(access.list_device()) == 3
+
+        rack.ic.shutdown()
+        host.ic.shutdown()
+
+    def test_list_acquired(self):
+        from device_repo import DeviceStatus
+
+        host = self.start_host()
+        rack = self.start_dummy_rack()
+        access = self.get_access()
+        dev1 = access.get_device('Dummy01')
+        dev2 = access.get_device('Dummy02')
+
+        assert dev1.get_data() == b'Dummy data 1'
+        assert dev2.get_data() == b'Dummy data 2'
+
+        dev_list = access.list_acquired_devices()
+        ids = [dev[0] for dev in dev_list]
+        assert "Dummy01" in ids
+        assert "Dummy02" in ids
+
+        access.release_all()
+
+        assert access.get_device_status('Dummy01') == DeviceStatus.Idle
+        assert access.get_device_status('Dummy02') == DeviceStatus.Idle
+
+        with pytest.raises(Ice.ObjectNotExistException):
+            dev1.get_data()
+        with pytest.raises(Ice.ObjectNotExistException):
+            dev2.get_data()
 
         rack.ic.shutdown()
         host.ic.shutdown()

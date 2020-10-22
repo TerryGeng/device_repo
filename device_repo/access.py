@@ -33,6 +33,8 @@ class DeviceRepoAccess:
         )
         self.host.ice_ping()
 
+        self.id_prx_map = {}
+
     def list_device(self):
         return self.host.list_devices()
 
@@ -41,15 +43,38 @@ class DeviceRepoAccess:
                 for dev in self.list_device()]
 
     def get_device(self, device_id):
-        _type = self.host.get_device_type(device_id)
-        prx = self.host.acquire_device(device_id)
-        return DEVICE_MAP[_type].uncheckedCast(prx)
+        if device_id not in self.id_prx_map:
+            _type = self.host.get_device_type(device_id)
+            prx = DEVICE_MAP[_type].uncheckedCast(self.host.acquire_device(device_id))
+            self.id_prx_map[device_id] = prx
+
+        return self.id_prx_map[device_id]
 
     def get_device_status(self, device_id):
         return self.host.check_device_status(device_id)
 
-    def release_device(self, device_id):
-        return self.host.release_device(device_id)
+    def release_device(self, dev):
+        dev_id = ""
+        if isinstance(dev, str):
+            dev_id = dev
+        else:
+            for _id, prx in self.id_prx_map.items():
+                if prx == dev:
+                    dev_id = _id
+                    break
+            if not dev_id:
+                return True
+
+        del self.id_prx_map[dev_id]
+        return self.host.release_device(dev_id)
+
+    def list_acquired_devices(self):
+        return [(dev.id, dev.type, self.host.check_device_status(dev.id))
+                for dev in self.host.list_acquired_devices()]
+
+    def release_all(self):
+        for _id, _, _ in self.list_acquired_devices():
+            self.host.release_device(_id)
 
     def __del__(self):
         self.ic.destroy()

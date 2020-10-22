@@ -7,7 +7,8 @@ module device_repo_ice {
         ParametricSignalGenerator,
         Acquisition,
         VectorNetworkAnalyzer,
-        DelayGenerator
+        DelayGenerator,
+        DCSource
     }
 
     enum DeviceStatus {
@@ -47,6 +48,7 @@ module device_repo_ice {
         DeviceType get_device_type(string id) throws UnknownDeviceException;
         Object* acquire_device(string id) throws DeviceOccupiedException, UnknownDeviceException;
         void release_device(string id) throws DeviceOccupiedException, UnknownDeviceException;
+        DeviceEntries list_acquired_devices();
 
         // --- for devices ---
         bool add_device(string id, DeviceType type, DeviceRack* rack, string access_token);
