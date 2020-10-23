@@ -40,28 +40,39 @@ class DCSourceChannel(DCSourceTemplate):
         self.dev.write(f':SNDT {self.ch}, "OPOF"')
 
 
-if __name__ == "__main__":
+def get_parser():
     parser = get_rack_argv_parser("Start the SRS DC source rack.")
 
     parser.add_argument("--address", type=str, dest="address",
                         help="VISA address of the SRS")
-    parser.add_argument("--name", type=str, dest="name",
+    parser.add_argument("--name", type=str, dest="name", default="",
                         help="name of the SRS")
-    args = parser.parse_args()
+    return parser
 
-    logger = get_logger()
+
+def load_dev(rack, args, logger=None):
     name = args.name
     resource_mgr = pyvisa.ResourceManager()
-    ch_dict = {}
-    rack = DeviceRack("DC_SRSRack", args.host, args.port, logger)
 
     logger.info(f"Open resource at {args.address}...")
     dev = resource_mgr.open_resource(args.address)
 
     for ch in [1, 2, 3, 4, 5, 6, 7, 8]:
-        identifier = f"DC_SRS_{name}_{ch}"
+        identifier = f"DC_SRS_{name}_CH{ch}" if args.name else f"DC_SRS_CH{ch}"
+        _id = f"{identifier}_CH{ch}"
 
-        srs = DCSourceChannel(identifier, ch, dev)
+        srs = DCSourceChannel(_id, ch, dev)
         rack.load_device(identifier, srs)
+
+
+if __name__ == "__main__":
+    import sys
+
+    parser = get_parser()
+    args = parser.parse_args(sys.argv)
+    logger = get_logger()
+    rack = DeviceRack("DC_SRSRack", args.host, args.port, logger)
+
+    load_dev(rack, args, logger)
 
     rack.start()

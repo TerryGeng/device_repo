@@ -1,3 +1,4 @@
+import os
 import time
 import unittest.mock
 import threading
@@ -188,4 +189,32 @@ class TestDummy:
 
         rack.ic.shutdown()
         host.ic.shutdown()
+
+    rack_starter_config = """
+    network:
+      host_address: 127.0.0.1
+      host_port: 20201
+    devices:
+      - dummy --data0 Hello --data1 World
+    """
+
+    def test_rack_starter(self):
+        path = os.path.join(os.path.dirname(__file__), 'test_rack_starter.yaml')
+        with unittest.mock.patch(
+                'sys.argv', ['rack_starter', '-c', path]):
+            from racks import rack_starter
+            host = self.start_host()
+            rack = rack_starter.start_rack_with_config(False)
+            threading.Thread(name="DummyRack", target=rack.start).start()
+            time.sleep(0.5)
+
+            access = self.get_access()
+            dev1 = access.get_device('Dummy01')
+            dev2 = access.get_device('Dummy02')
+
+            assert dev1.get_data() == b'Hello'
+            assert dev2.get_data() == b'World'
+
+            rack.ic.shutdown()
+            host.ic.shutdown()
 

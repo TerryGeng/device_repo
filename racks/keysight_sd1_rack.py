@@ -1,16 +1,16 @@
 import logging
 import Ice
-import numpy as np
 
 from device_repo import AWGTemplate, DeviceRack, DeviceType
 from device_repo.utils import get_logger, get_rack_argv_parser, log_invoke_evt
-from driver.keysight_sd1 import (
-    SD_AOU, SD_Wave, SD_Waveshapes, SD_TriggerExternalSources,
-    SD_TriggerBehaviors, SD_WaveformTypes, SD_TriggerModes)
 
 
 class Keysight_M3202A(AWGTemplate):
     def __init__(self, chassis, slot, channel, sample_rate=1e9):
+        from driver.keysight_sd1 import (
+            SD_AOU, SD_Wave, SD_Waveshapes, SD_TriggerExternalSources,
+            SD_TriggerBehaviors, SD_WaveformTypes, SD_TriggerModes)
+
         self.name = f"AWG M3202A Chassis{chassis} Slot{slot} Channel{channel}"
         self.sample_rate = sample_rate
         self.dev = SD_AOU()
@@ -20,7 +20,7 @@ class Keysight_M3202A(AWGTemplate):
 
         self.dev.openWithSlot("M3202A", chassis, slot)
         self.dev.waveformFlush()
-        # make all channelannels work in AWG mode
+        # make all channels work in AWG mode
         self.dev.channelWaveShape(channel, SD_Waveshapes.AOU_AWG)
         self.dev.channelAmplitude(channel, 1.0)
         self.dev.channelOffset(channel, 0.0)
@@ -38,6 +38,8 @@ class Keysight_M3202A(AWGTemplate):
     def write_raw_waveform(self, amplitude, raw_waveform,
                            current=None):
         """ICE method"""
+        import numpy as np
+        from driver.keysight_sd1 import SD_Wave, SD_WaveformTypes, SD_TriggerModes
         sd_wave = SD_Wave()
 
         # Bug / feature of M3020A.
@@ -76,16 +78,30 @@ class Keysight_M3202A(AWGTemplate):
         self.dev.channelAmplitude(self.channel, amp)
 
 
-if __name__ == "__main__":
+def get_parser():
     parser = get_rack_argv_parser("Start the Keysight M3202A rack.")
 
     parser.add_argument("location", nargs="+", dest="location", type=str,
                         help="location of the M3202A, in the format of "
-                        "{chasis}:{slot} (multiple instances can be loaded)")
-    args = parser.parse_args()
+                             "{chasis}:{slot} (multiple instances can be loaded)")
+    return parser
 
+
+def load_keysight_m3202a(rack, chasis, slot, identifier="", logger=None):
+    for channel in [1, 2, 3, 4]:
+        _id = ""
+        if not identifier:
+            _id = f"M3202A_C{chasis}_S{slot}_CH{channel}"
+        else:
+            _id = identifier + f"_CH{channel}"
+        if logger:
+            logger.info(f"Initializing {_id}...")
+        keysight = Keysight_M3202A(chasis, slot, channel)
+        rack.load_device(_id, keysight)
+
+
+def load_dev(rack, args=None, logger=None):
     awgs = []
-
     for location in args.location:
         splited = location.split(":")
         if len(splited) != 2 or not isinstance(splited[0], int) or \
@@ -93,15 +109,17 @@ if __name__ == "__main__":
             parser.print_help()
         awgs.append((int(splited[0]), int(splited[1])))
 
-    logger = get_logger()
-    rack = DeviceRack("KeysightM3202ARack", args.host, args.port, logger)
-
     for awg in awgs:
         chasis, slot = awg
-        for channel in [1, 2, 3, 4]:
-            identifier = f"KeysightM3202A_C{chasis}_S{slot}_CH_{channel}"
-            logger.info(f"Initializing {identifier}...")
-            keysight = Keysight_M3202A(chasis, slot, channel)
-            rack.load_device(identifier, keysight)
+        load_keysight_m3202a(rack, chasis, slot, "", logger)
+
+
+if __name__ == "__main__":
+    parser = get_parser()
+    args = parser.parse_args()
+
+    logger = get_logger()
+    rack = DeviceRack("KeysightM3202ARack", args.host, args.port, logger)
+    load_dev(rack, args, logger)
 
     rack.start()

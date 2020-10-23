@@ -42,14 +42,16 @@ class PSG(PSGTemplate):
         self.dev.write(":OUTP OFF")
 
 
-if __name__ == "__main__":
+def get_parser():
     parser = get_rack_argv_parser("Start the general PSG rack.")
 
     parser.add_argument("name_address", nargs="+", type=str,
                         help="name and VISA address of the PSG, in the format of "
                              "{name}@{address} (multiple instances can be loaded)")
-    args = parser.parse_args()
+    return parser
 
+
+def load_dev(rack, args=None, logger=None):
     name_address_pairs = []
 
     for name_addr in args.name_address:
@@ -58,14 +60,22 @@ if __name__ == "__main__":
             parser.print_help()
         name_address_pairs.append((splited[0], splited[1]))
 
-    logger = get_logger()
-    rack = DeviceRack("PSGRack", args.host, args.port, logger)
-
     for name, addr in name_address_pairs:
         identifier = f"PSG_{name}"
-        logger.info(f"Initializing {identifier} at {addr}...")
+        if logger:
+            logger.info(f"Initializing {identifier} at {addr}...")
 
         psg = PSG(name, addr)
         rack.load_device(identifier, psg)
+
+
+if __name__ == "__main__":
+    parser = get_parser()
+    args = parser.parse_args()
+
+    logger = get_logger()
+    rack = DeviceRack("PSGRack", args.host, args.port, logger)
+
+    load_dev(rack, args, logger)
 
     rack.start()
