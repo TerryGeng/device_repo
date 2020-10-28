@@ -1,45 +1,42 @@
 from device_repo import PSGTemplate, DeviceRack, DeviceType
 from device_repo.utils import get_logger, get_rack_argv_parser, log_invoke_evt
+from .driver.visa_device import VisaDeviceBase, get_device_by_address
 
-import pyvisa
 
-
-class PSG(PSGTemplate):
-    def __init__(self, name, address):
-        self.name = f"PSG {name} @ {address}"
-        self.address = address
-        self.resource_mgr = pyvisa.ResourceManager()
-        self.dev = self.resource_mgr.open_resource(address)
+class PSG(PSGTemplate, VisaDeviceBase):
+    def __init__(self, name, dev):
+        super().__init__(dev)
+        self.name = f"PSG {name}"
 
     def get_type(self, current=None):
         return DeviceType.ParametricSignalGenerator
 
     @log_invoke_evt
     def set_frequency(self, freq_in_hz, current=None):
-        self.dev.write(f":FREQ {freq_in_hz:.13e} Hz")
+        self.visa_write(f":FREQ {freq_in_hz:.13e} Hz")
 
     @log_invoke_evt
     def get_frequency(self, current=None):
-        return float(self.dev.query(f":FREQ?"))
+        return float(self.visa_query(f":FREQ?"))
 
     @log_invoke_evt
     def set_power(self, amp_in_dbm, current=None):
         """ICE method"""
-        self.dev.write(f":POWER {amp_in_dbm:.8e} dBm")
+        self.visa_write(f":POWER {amp_in_dbm:.8e} dBm")
 
     @log_invoke_evt
     def get_power(self, current=None):
-        return float(self.dev.query(f":POWER?"))
+        return float(self.visa_query(f":POWER?"))
 
     @log_invoke_evt
     def run(self, current=None):
         """ICE method"""
-        self.dev.write(":OUTP ON")
+        self.visa_write(":OUTP ON")
 
     @log_invoke_evt
     def stop(self, current=None):
         """ICE method"""
-        self.dev.write(":OUTP OFF")
+        self.visa_write(":OUTP OFF")
 
 
 def get_parser():
@@ -61,11 +58,13 @@ def load_dev(rack, args=None, logger=None):
         name_address_pairs.append((splited[0], splited[1]))
 
     for name, addr in name_address_pairs:
+        dev = get_device_by_address(addr)
         identifier = f"PSG_{name}"
+
         if logger:
             logger.info(f"Initializing {identifier} at {addr}...")
 
-        psg = PSG(name, addr)
+        psg = PSG(name, dev)
         rack.load_device(identifier, psg)
 
 

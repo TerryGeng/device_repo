@@ -27,6 +27,8 @@ module device_repo_ice {
     }
 
     sequence<byte> bytes;
+    sequence<double> doubles;
+    sequence<string> strings;
 
     sequence<DeviceEntry> DeviceEntries;
 

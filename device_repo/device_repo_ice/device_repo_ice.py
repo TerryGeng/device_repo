@@ -18,8 +18,8 @@ from sys import version_info as _version_info_
 import Ice, IcePy
 
 # Start of module device_repo_ice
-_M_device_repo_ice = Ice.openModule('device_repo.device_repo_ice')
-__name__ = 'device_repo.device_repo_ice'
+_M_device_repo_ice = Ice.openModule('device_repo_ice')
+__name__ = 'device_repo_ice'
 
 if 'DeviceType' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice.DeviceType = Ice.createTempClass()
@@ -40,7 +40,8 @@ if 'DeviceType' not in _M_device_repo_ice.__dict__:
     DeviceType.Acquisition = DeviceType("Acquisition", 3)
     DeviceType.VectorNetworkAnalyzer = DeviceType("VectorNetworkAnalyzer", 4)
     DeviceType.DelayGenerator = DeviceType("DelayGenerator", 5)
-    DeviceType._enumerators = { 0:DeviceType.Dummy, 1:DeviceType.ArbitraryWaveformGenerator, 2:DeviceType.ParametricSignalGenerator, 3:DeviceType.Acquisition, 4:DeviceType.VectorNetworkAnalyzer, 5:DeviceType.DelayGenerator }
+    DeviceType.DCSource = DeviceType("DCSource", 6)
+    DeviceType._enumerators = { 0:DeviceType.Dummy, 1:DeviceType.ArbitraryWaveformGenerator, 2:DeviceType.ParametricSignalGenerator, 3:DeviceType.Acquisition, 4:DeviceType.VectorNetworkAnalyzer, 5:DeviceType.DelayGenerator, 6:DeviceType.DCSource }
 
     _M_device_repo_ice._t_DeviceType = IcePy.defineEnum('::device_repo_ice::DeviceType', DeviceType, (), DeviceType._enumerators)
 
@@ -227,6 +228,12 @@ if 'DevicePrx' not in _M_device_repo_ice.__dict__:
 
 if '_t_bytes' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice._t_bytes = IcePy.defineSequence('::device_repo_ice::bytes', (), IcePy._t_byte)
+
+if '_t_doubles' not in _M_device_repo_ice.__dict__:
+    _M_device_repo_ice._t_doubles = IcePy.defineSequence('::device_repo_ice::doubles', (), IcePy._t_double)
+
+if '_t_strings' not in _M_device_repo_ice.__dict__:
+    _M_device_repo_ice._t_strings = IcePy.defineSequence('::device_repo_ice::strings', (), IcePy._t_string)
 
 if '_t_DeviceEntries' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice._t_DeviceEntries = IcePy.defineSequence('::device_repo_ice::DeviceEntries', (), _M_device_repo_ice._t_DeviceEntry)
@@ -449,6 +456,18 @@ if 'DeviceRepoPrx' not in _M_device_repo_ice.__dict__:
         def end_release_device(self, _r):
             return _M_device_repo_ice.DeviceRepo._op_release_device.end(self, _r)
 
+        def list_acquired_devices(self, context=None):
+            return _M_device_repo_ice.DeviceRepo._op_list_acquired_devices.invoke(self, ((), context))
+
+        def list_acquired_devicesAsync(self, context=None):
+            return _M_device_repo_ice.DeviceRepo._op_list_acquired_devices.invokeAsync(self, ((), context))
+
+        def begin_list_acquired_devices(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.DeviceRepo._op_list_acquired_devices.begin(self, ((), _response, _ex, _sent, context))
+
+        def end_list_acquired_devices(self, _r):
+            return _M_device_repo_ice.DeviceRepo._op_list_acquired_devices.end(self, _r)
+
         def add_device(self, id, type, rack, access_token, context=None):
             return _M_device_repo_ice.DeviceRepo._op_add_device.invoke(self, ((id, type, rack, access_token), context))
 
@@ -505,6 +524,9 @@ if 'DeviceRepoPrx' not in _M_device_repo_ice.__dict__:
         def release_device(self, id, current=None):
             raise NotImplementedError("servant method 'release_device' not implemented")
 
+        def list_acquired_devices(self, current=None):
+            raise NotImplementedError("servant method 'list_acquired_devices' not implemented")
+
         def add_device(self, id, type, rack, access_token, current=None):
             raise NotImplementedError("servant method 'add_device' not implemented")
 
@@ -521,6 +543,7 @@ if 'DeviceRepoPrx' not in _M_device_repo_ice.__dict__:
     DeviceRepo._op_get_device_type = IcePy.Operation('get_device_type', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), ((), _M_device_repo_ice._t_DeviceType, False, 0), (_M_device_repo_ice._t_UnknownDeviceException,))
     DeviceRepo._op_acquire_device = IcePy.Operation('acquire_device', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), ((), IcePy._t_ObjectPrx, False, 0), (_M_device_repo_ice._t_DeviceOccupiedException, _M_device_repo_ice._t_UnknownDeviceException))
     DeviceRepo._op_release_device = IcePy.Operation('release_device', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), None, (_M_device_repo_ice._t_DeviceOccupiedException, _M_device_repo_ice._t_UnknownDeviceException))
+    DeviceRepo._op_list_acquired_devices = IcePy.Operation('list_acquired_devices', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DeviceEntries, False, 0), ())
     DeviceRepo._op_add_device = IcePy.Operation('add_device', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0), ((), _M_device_repo_ice._t_DeviceType, False, 0), ((), _M_device_repo_ice._t_DeviceRackPrx, False, 0), ((), IcePy._t_string, False, 0)), (), ((), IcePy._t_bool, False, 0), ())
 
     _M_device_repo_ice.DeviceRepo = DeviceRepo

@@ -16,13 +16,13 @@
 
 from sys import version_info as _version_info_
 import Ice, IcePy
-from . import device_repo_ice
+import device_repo_ice.device_repo_ice
 
 # Included module device_repo_ice
-_M_device_repo_ice = Ice.openModule('device_repo.device_repo_ice')
+_M_device_repo_ice = Ice.openModule('device_repo_ice')
 
 # Start of module device_repo_ice
-__name__ = 'device_repo.device_repo_ice'
+__name__ = 'device_repo_ice'
 
 _M_device_repo_ice._t_DCSource = IcePy.defineValue('::device_repo_ice::DCSource', Ice.Value, -1, (), False, True, None, ())
 
@@ -30,14 +30,14 @@ if 'DCSourcePrx' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice.DCSourcePrx = Ice.createTempClass()
     class DCSourcePrx(_M_device_repo_ice.DevicePrx):
 
-        def set_voltage(self, voltage, context=None):
-            return _M_device_repo_ice.DCSource._op_set_voltage.invoke(self, ((voltage, ), context))
+        def set_voltage(self, voltage_in_volts, context=None):
+            return _M_device_repo_ice.DCSource._op_set_voltage.invoke(self, ((voltage_in_volts, ), context))
 
-        def set_voltageAsync(self, voltage, context=None):
-            return _M_device_repo_ice.DCSource._op_set_voltage.invokeAsync(self, ((voltage, ), context))
+        def set_voltageAsync(self, voltage_in_volts, context=None):
+            return _M_device_repo_ice.DCSource._op_set_voltage.invokeAsync(self, ((voltage_in_volts, ), context))
 
-        def begin_set_voltage(self, voltage, _response=None, _ex=None, _sent=None, context=None):
-            return _M_device_repo_ice.DCSource._op_set_voltage.begin(self, ((voltage, ), _response, _ex, _sent, context))
+        def begin_set_voltage(self, voltage_in_volts, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.DCSource._op_set_voltage.begin(self, ((voltage_in_volts, ), _response, _ex, _sent, context))
 
         def end_set_voltage(self, _r):
             return _M_device_repo_ice.DCSource._op_set_voltage.end(self, _r)
@@ -107,7 +107,7 @@ if 'DCSourcePrx' not in _M_device_repo_ice.__dict__:
         def ice_staticId():
             return '::device_repo_ice::DCSource'
 
-        def set_voltage(self, voltage, current=None):
+        def set_voltage(self, voltage_in_volts, current=None):
             raise NotImplementedError("servant method 'set_voltage' not implemented")
 
         def get_voltage(self, current=None):

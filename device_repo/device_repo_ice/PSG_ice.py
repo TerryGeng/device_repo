@@ -16,13 +16,13 @@
 
 from sys import version_info as _version_info_
 import Ice, IcePy
-from . import device_repo_ice
+import device_repo_ice.device_repo_ice
 
 # Included module device_repo_ice
-_M_device_repo_ice = Ice.openModule('device_repo.device_repo_ice')
+_M_device_repo_ice = Ice.openModule('device_repo_ice')
 
 # Start of module device_repo_ice
-__name__ = 'device_repo.device_repo_ice'
+__name__ = 'device_repo_ice'
 
 _M_device_repo_ice._t_PSG = IcePy.defineValue('::device_repo_ice::PSG', Ice.Value, -1, (), False, True, None, ())
 

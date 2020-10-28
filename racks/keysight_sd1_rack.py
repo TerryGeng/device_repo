@@ -1,15 +1,12 @@
-import logging
-import Ice
-
 from device_repo import AWGTemplate, DeviceRack, DeviceType
 from device_repo.utils import get_logger, get_rack_argv_parser, log_invoke_evt
 
 
 class Keysight_M3202A(AWGTemplate):
     def __init__(self, chassis, slot, channel, sample_rate=1e9):
-        from driver.keysight_sd1 import (
-            SD_AOU, SD_Wave, SD_Waveshapes, SD_TriggerExternalSources,
-            SD_TriggerBehaviors, SD_WaveformTypes, SD_TriggerModes)
+        from racks.driver import (
+            SD_AOU, SD_Waveshapes, SD_TriggerExternalSources,
+            SD_TriggerBehaviors)
 
         self.name = f"AWG M3202A Chassis{chassis} Slot{slot} Channel{channel}"
         self.sample_rate = sample_rate
@@ -39,7 +36,7 @@ class Keysight_M3202A(AWGTemplate):
                            current=None):
         """ICE method"""
         import numpy as np
-        from driver.keysight_sd1 import SD_Wave, SD_WaveformTypes, SD_TriggerModes
+        from racks.driver import SD_Wave, SD_WaveformTypes, SD_TriggerModes
         sd_wave = SD_Wave()
 
         # Bug / feature of M3020A.
