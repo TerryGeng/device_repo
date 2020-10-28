@@ -1,14 +1,25 @@
 def get_device_module():
-    from . import dummy_rack
-    from . import psg_rack
-    from . import keysight_sd1_rack
-    from . import dc_srs_rack
+    def get_dummy_module():
+        from . import dummy_rack
+        return dummy_rack
 
-    device_module = {
-        "dummy": dummy_rack,
-        "psg": psg_rack,
-        "keysightsd1": keysight_sd1_rack,
-        "dc_srs": dc_srs_rack
+    def get_psg_module():
+        from . import psg_rack
+        return psg_rack
+
+    def get_keysight_sd1_module():
+        from . import keysight_sd1_rack
+        return keysight_sd1_rack
+
+    def get_dc_srs_module():
+        from . import dc_srs_rack
+        return dc_srs_rack
+
+    device_module_getter = {
+        "dummy": get_dummy_module,
+        "psg": get_psg_module,
+        "keysightsd1": get_keysight_sd1_module,
+        "dc_srs": get_dc_srs_module
     }
 
-    return device_module
+    return device_module_getter

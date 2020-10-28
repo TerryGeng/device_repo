@@ -43,7 +43,8 @@ def start_rack_with_config(start_immediately=True):
         dev = argv[0].lower()
         logger.info(f"=> Initializing device {argv[0]}")
         if dev in device_module:
-            parser = device_module[dev].get_parser()
+            module = device_module[dev]()
+            parser = module.get_parser()
             try:
                 argv.pop(0)
                 args = parser.parse_args(argv)
@@ -51,7 +52,7 @@ def start_rack_with_config(start_immediately=True):
                 print(f"Error: Invalid initialization instruction for {argv[0]}.")
                 exit(1)
 
-            device_module[dev].load_dev(rack, args, logger)
+            module.load_dev(rack, args, logger)
         else:
             print(f"Error: Device {argv[0]} not found.")
             exit(1)

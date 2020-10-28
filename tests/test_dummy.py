@@ -190,14 +190,6 @@ class TestDummy:
         rack.ic.shutdown()
         host.ic.shutdown()
 
-    rack_starter_config = """
-    network:
-      host_address: 127.0.0.1
-      host_port: 20201
-    devices:
-      - dummy --data0 Hello --data1 World
-    """
-
     def test_rack_starter(self):
         path = os.path.join(os.path.dirname(__file__), 'test_rack_starter.yaml')
         with unittest.mock.patch(
