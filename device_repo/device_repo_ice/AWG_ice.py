@@ -16,13 +16,13 @@
 
 from sys import version_info as _version_info_
 import Ice, IcePy
-import device_repo_ice.device_repo_ice
+from . import device_repo_ice
 
 # Included module device_repo_ice
-_M_device_repo_ice = Ice.openModule('device_repo_ice')
+_M_device_repo_ice = Ice.openModule('device_repo.device_repo_ice')
 
 # Start of module device_repo_ice
-__name__ = 'device_repo_ice'
+__name__ = 'device_repo.device_repo_ice'
 
 if '_t_RawWaveform' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice._t_RawWaveform = IcePy.defineSequence('::device_repo_ice::RawWaveform', (), IcePy._t_double)

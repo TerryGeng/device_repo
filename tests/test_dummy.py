@@ -76,9 +76,8 @@ class TestDummy:
 
         assert dev == dev_
 
-        from device_repo import DummyDevice
-        assert isinstance(dev, DummyDevice)
         assert dev.get_data() == b'Dummy data 1'
+        assert dev.get_string_data() == 'Dummy data 1'
 
         access.release_device('Dummy01')
 

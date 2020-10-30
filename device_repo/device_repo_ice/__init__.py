@@ -5,11 +5,13 @@ import Ice
 Ice.updateModule("device_repo_ice")
 
 # Modules:
-import device_repo_ice.PSG_ice
-import device_repo_ice.AWG_ice
-import device_repo_ice.Dummy_ice
-import device_repo_ice.device_repo_ice
-import device_repo_ice.visa_device_ice
-import device_repo_ice.DCSource_ice
+from . import PSG_ice
+from . import AWG_ice
+from . import Dummy_ice
+from . import device_type_ice
+from . import VNA_ice
+from . import device_repo_ice
+from . import visa_device_ice
+from . import DCSource_ice
 
 # Submodules:

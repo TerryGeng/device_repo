@@ -1,12 +1,13 @@
 import Ice
 
-from .device_repo_ice import (DeviceRepoPrx, DeviceStatus, DeviceType,
-                              DummyDevicePrx, AWGPrx, PSGPrx)
+from device_repo import (DeviceType, DeviceRepo, DeviceStatus,
+                         DummyDevice, AWG, PSG, VNA)
 
 DEVICE_MAP = {
-    DeviceType.Dummy: DummyDevicePrx,
-    DeviceType.ArbitraryWaveformGenerator: AWGPrx,
-    DeviceType.ParametricSignalGenerator: PSGPrx
+    DeviceType.Dummy: DummyDevice,
+    DeviceType.ArbitraryWaveformGenerator: AWG,
+    DeviceType.ParametricSignalGenerator: PSG,
+    DeviceType.VectorNetworkAnalyzer: VNA
 }
 
 
@@ -25,7 +26,7 @@ class DeviceRepoAccess:
 
         self.ic = Ice.initialize(ice_init_data)
 
-        self.host: DeviceRepoPrx = DeviceRepoPrx.checkedCast(
+        self.host: DeviceRepo = DeviceRepo.checkedCast(
             self.ic.stringToProxy(
                 f"DeviceRepo:tcp -h {self.host_address} "
                 f"-p {self.host_port}"

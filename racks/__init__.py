@@ -15,11 +15,16 @@ def get_device_module():
         from . import dc_srs_rack
         return dc_srs_rack
 
+    def get_vna_module():
+        from . import vna_rack
+        return vna_rack
+
     device_module_getter = {
         "dummy": get_dummy_module,
         "psg": get_psg_module,
         "keysightsd1": get_keysight_sd1_module,
-        "dc_srs": get_dc_srs_module
+        "dc_srs": get_dc_srs_module,
+        "vna": get_vna_module
     }
 
     return device_module_getter

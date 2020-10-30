@@ -16,13 +16,13 @@
 
 from sys import version_info as _version_info_
 import Ice, IcePy
-import device_repo_ice.device_repo_ice
+from . import device_repo_ice
 
 # Included module device_repo_ice
-_M_device_repo_ice = Ice.openModule('device_repo_ice')
+_M_device_repo_ice = Ice.openModule('device_repo.device_repo_ice')
 
 # Start of module device_repo_ice
-__name__ = 'device_repo_ice'
+__name__ = 'device_repo.device_repo_ice'
 
 _M_device_repo_ice._t_VisaDevice = IcePy.defineValue('::device_repo_ice::VisaDevice', Ice.Value, -1, (), False, True, None, ())
 
@@ -53,6 +53,18 @@ if 'VisaDevicePrx' not in _M_device_repo_ice.__dict__:
 
         def end_visa_write(self, _r):
             return _M_device_repo_ice.VisaDevice._op_visa_write.end(self, _r)
+
+        def visa_error(self, context=None):
+            return _M_device_repo_ice.VisaDevice._op_visa_error.invoke(self, ((), context))
+
+        def visa_errorAsync(self, context=None):
+            return _M_device_repo_ice.VisaDevice._op_visa_error.invokeAsync(self, ((), context))
+
+        def begin_visa_error(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.VisaDevice._op_visa_error.begin(self, ((), _response, _ex, _sent, context))
+
+        def end_visa_error(self, _r):
+            return _M_device_repo_ice.VisaDevice._op_visa_error.end(self, _r)
 
         @staticmethod
         def checkedCast(proxy, facetOrContext=None, context=None):
@@ -89,6 +101,9 @@ if 'VisaDevicePrx' not in _M_device_repo_ice.__dict__:
         def visa_write(self, current=None):
             raise NotImplementedError("servant method 'visa_write' not implemented")
 
+        def visa_error(self, current=None):
+            raise NotImplementedError("servant method 'visa_error' not implemented")
+
         def __str__(self):
             return IcePy.stringify(self, _M_device_repo_ice._t_VisaDeviceDisp)
 
@@ -99,6 +114,7 @@ if 'VisaDevicePrx' not in _M_device_repo_ice.__dict__:
 
     VisaDevice._op_visa_query = IcePy.Operation('visa_query', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_strings, False, 0), ())
     VisaDevice._op_visa_write = IcePy.Operation('visa_write', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
+    VisaDevice._op_visa_error = IcePy.Operation('visa_error', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_string, False, 0), ())
 
     _M_device_repo_ice.VisaDevice = VisaDevice
     del VisaDevice

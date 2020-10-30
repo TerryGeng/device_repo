@@ -1,12 +1,16 @@
 from device_repo import PSGTemplate, DeviceRack, DeviceType
 from device_repo.utils import get_logger, get_rack_argv_parser, log_invoke_evt
-from .driver.visa_device import VisaDeviceBase, get_device_by_address
+
+if __name__ == "__main__":
+    from driver.visa_device import VisaDeviceBase, get_device_by_address
+else:
+    from .driver.visa_device import VisaDeviceBase, get_device_by_address
 
 
-class PSG(PSGTemplate, VisaDeviceBase):
-    def __init__(self, name, dev):
+class PSG_SRS(PSGTemplate, VisaDeviceBase):
+    def __init__(self, id, dev):
         super().__init__(dev)
-        self.name = f"PSG {name}"
+        self.id = id
 
     def get_type(self, current=None):
         return DeviceType.ParametricSignalGenerator
@@ -59,12 +63,12 @@ def load_dev(rack, args=None, logger=None):
 
     for name, addr in name_address_pairs:
         dev = get_device_by_address(addr)
-        identifier = f"PSG_{name}"
+        identifier = f"PSG_SRS_{name}"
 
         if logger:
             logger.info(f"Initializing {identifier} at {addr}...")
 
-        psg = PSG(name, dev)
+        psg = PSG_SRS(identifier, dev)
         rack.load_device(identifier, psg)
 
 
