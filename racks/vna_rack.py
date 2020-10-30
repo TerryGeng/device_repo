@@ -50,9 +50,9 @@ class VNA_E8363B(VNATemplate, VisaDeviceBase):
 
     @log_invoke_evt
     def get_s(self, channel, current=None):
-        msg = self.query(f':CALC{channel}:PAR:CAT?').strip('"')
+        msg = self.visa_query(f':CALC{channel}:PAR:CAT?').strip('"')
         measname = msg.split(',')[0]
-        self.write(f':CALC{channel}:PAR:SEL "{measname}"')
+        self.visa_write(f':CALC{channel}:PAR:SEL "{measname}"')
 
         self.sweep_off()
         self.visa_write(":INIT:IMM")
@@ -60,7 +60,7 @@ class VNA_E8363B(VNATemplate, VisaDeviceBase):
         self.visa_write(":FORMAT:BORD NORM")
         self.visa_write(":FORMAT ASCII")
 
-        data = self.visa_query_ascii_array(f":CALC{channel}:DATA:? SDATA")
+        data = self.visa_query_ascii_array(f":CALC{channel}:DATA? SDATA")
 
         return data
 

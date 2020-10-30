@@ -17,5 +17,7 @@ class VNAWrapper(WrapperBase):
 
     def get_s(self, channel, context=None):
         ret = self.base.get_s(channel, context)
-        complex_ret = ret[::2] + 1j * ret[1::2]
+        reals = ret[::2]
+        imags = ret[1::2]
+        complex_ret = [real + 1j*imag for real, imag in zip(reals, imags)]
         return complex_ret
