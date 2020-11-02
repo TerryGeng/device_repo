@@ -17,15 +17,18 @@ module device_repo_ice {
         DeviceType get_type();
     }
 
-    sequence<byte> bytes;
-    sequence<double> doubles;
-    sequence<string> strings;
-
     sequence<DeviceEntry> DeviceEntries;
 
     exception InvalidTokenException {};
     exception DeviceOccupiedException {};
     exception UnknownDeviceException {};
+
+    exception DeviceException {
+        string msg;
+    };
+    exception WrongParameterException {
+        string msg;
+    };
 
     interface DeviceRack {
         // -- for device repo --

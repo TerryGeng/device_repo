@@ -15,7 +15,7 @@ class VNAWrapper(WrapperBase):
     def uncheckedCast(proxy, facet=None):
         return VNAWrapper(VNAPrx.uncheckedCast(proxy, facet))
 
-    def get_s(self, channel, context=None):
+    def get_s(self, channel=1, context=None):
         ret = self.base.get_s(channel, context)
         reals = ret[::2]
         imags = ret[1::2]

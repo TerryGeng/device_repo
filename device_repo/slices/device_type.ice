@@ -5,9 +5,21 @@ module device_repo_ice {
         Dummy,
         ArbitraryWaveformGenerator,
         ParametricSignalGenerator,
-        Acquisition,
+        Digitizer,
         VectorNetworkAnalyzer,
         DelayGenerator,
         DCSource
     }
+
+    sequence<byte> bytes;
+    sequence<int> ints;
+    sequence<double> doubles;
+    sequence<string> strings;
+
+    struct DoubleDataSet {
+        ints shape;
+        doubles array;
+    };
+
+    sequence<DoubleDataSet> DoubleDataSets;
 }

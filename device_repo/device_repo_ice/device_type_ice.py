@@ -37,15 +37,65 @@ if 'DeviceType' not in _M_device_repo_ice.__dict__:
     DeviceType.Dummy = DeviceType("Dummy", 0)
     DeviceType.ArbitraryWaveformGenerator = DeviceType("ArbitraryWaveformGenerator", 1)
     DeviceType.ParametricSignalGenerator = DeviceType("ParametricSignalGenerator", 2)
-    DeviceType.Acquisition = DeviceType("Acquisition", 3)
+    DeviceType.Digitizer = DeviceType("Digitizer", 3)
     DeviceType.VectorNetworkAnalyzer = DeviceType("VectorNetworkAnalyzer", 4)
     DeviceType.DelayGenerator = DeviceType("DelayGenerator", 5)
     DeviceType.DCSource = DeviceType("DCSource", 6)
-    DeviceType._enumerators = { 0:DeviceType.Dummy, 1:DeviceType.ArbitraryWaveformGenerator, 2:DeviceType.ParametricSignalGenerator, 3:DeviceType.Acquisition, 4:DeviceType.VectorNetworkAnalyzer, 5:DeviceType.DelayGenerator, 6:DeviceType.DCSource }
+    DeviceType._enumerators = { 0:DeviceType.Dummy, 1:DeviceType.ArbitraryWaveformGenerator, 2:DeviceType.ParametricSignalGenerator, 3:DeviceType.Digitizer, 4:DeviceType.VectorNetworkAnalyzer, 5:DeviceType.DelayGenerator, 6:DeviceType.DCSource }
 
     _M_device_repo_ice._t_DeviceType = IcePy.defineEnum('::device_repo_ice::DeviceType', DeviceType, (), DeviceType._enumerators)
 
     _M_device_repo_ice.DeviceType = DeviceType
     del DeviceType
+
+if '_t_bytes' not in _M_device_repo_ice.__dict__:
+    _M_device_repo_ice._t_bytes = IcePy.defineSequence('::device_repo_ice::bytes', (), IcePy._t_byte)
+
+if '_t_ints' not in _M_device_repo_ice.__dict__:
+    _M_device_repo_ice._t_ints = IcePy.defineSequence('::device_repo_ice::ints', (), IcePy._t_int)
+
+if '_t_doubles' not in _M_device_repo_ice.__dict__:
+    _M_device_repo_ice._t_doubles = IcePy.defineSequence('::device_repo_ice::doubles', (), IcePy._t_double)
+
+if '_t_strings' not in _M_device_repo_ice.__dict__:
+    _M_device_repo_ice._t_strings = IcePy.defineSequence('::device_repo_ice::strings', (), IcePy._t_string)
+
+if 'DoubleDataSet' not in _M_device_repo_ice.__dict__:
+    _M_device_repo_ice.DoubleDataSet = Ice.createTempClass()
+    class DoubleDataSet(object):
+        def __init__(self, shape=None, array=None):
+            self.shape = shape
+            self.array = array
+
+        def __eq__(self, other):
+            if other is None:
+                return False
+            elif not isinstance(other, _M_device_repo_ice.DoubleDataSet):
+                return NotImplemented
+            else:
+                if self.shape != other.shape:
+                    return False
+                if self.array != other.array:
+                    return False
+                return True
+
+        def __ne__(self, other):
+            return not self.__eq__(other)
+
+        def __str__(self):
+            return IcePy.stringify(self, _M_device_repo_ice._t_DoubleDataSet)
+
+        __repr__ = __str__
+
+    _M_device_repo_ice._t_DoubleDataSet = IcePy.defineStruct('::device_repo_ice::DoubleDataSet', DoubleDataSet, (), (
+        ('shape', (), _M_device_repo_ice._t_ints),
+        ('array', (), _M_device_repo_ice._t_doubles)
+    ))
+
+    _M_device_repo_ice.DoubleDataSet = DoubleDataSet
+    del DoubleDataSet
+
+if '_t_DoubleDataSets' not in _M_device_repo_ice.__dict__:
+    _M_device_repo_ice._t_DoubleDataSets = IcePy.defineSequence('::device_repo_ice::DoubleDataSets', (), _M_device_repo_ice._t_DoubleDataSet)
 
 # End of module device_repo_ice

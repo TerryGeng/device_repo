@@ -202,15 +202,6 @@ if 'DevicePrx' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice.Device = Device
     del Device
 
-if '_t_bytes' not in _M_device_repo_ice.__dict__:
-    _M_device_repo_ice._t_bytes = IcePy.defineSequence('::device_repo_ice::bytes', (), IcePy._t_byte)
-
-if '_t_doubles' not in _M_device_repo_ice.__dict__:
-    _M_device_repo_ice._t_doubles = IcePy.defineSequence('::device_repo_ice::doubles', (), IcePy._t_double)
-
-if '_t_strings' not in _M_device_repo_ice.__dict__:
-    _M_device_repo_ice._t_strings = IcePy.defineSequence('::device_repo_ice::strings', (), IcePy._t_string)
-
 if '_t_DeviceEntries' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice._t_DeviceEntries = IcePy.defineSequence('::device_repo_ice::DeviceEntries', (), _M_device_repo_ice._t_DeviceEntry)
 
@@ -270,6 +261,44 @@ if 'UnknownDeviceException' not in _M_device_repo_ice.__dict__:
 
     _M_device_repo_ice.UnknownDeviceException = UnknownDeviceException
     del UnknownDeviceException
+
+if 'DeviceException' not in _M_device_repo_ice.__dict__:
+    _M_device_repo_ice.DeviceException = Ice.createTempClass()
+    class DeviceException(Ice.UserException):
+        def __init__(self, msg=''):
+            self.msg = msg
+
+        def __str__(self):
+            return IcePy.stringifyException(self)
+
+        __repr__ = __str__
+
+        _ice_id = '::device_repo_ice::DeviceException'
+
+    _M_device_repo_ice._t_DeviceException = IcePy.defineException('::device_repo_ice::DeviceException', DeviceException, (), False, None, (('msg', (), IcePy._t_string, False, 0),))
+    DeviceException._ice_type = _M_device_repo_ice._t_DeviceException
+
+    _M_device_repo_ice.DeviceException = DeviceException
+    del DeviceException
+
+if 'WrongParameterException' not in _M_device_repo_ice.__dict__:
+    _M_device_repo_ice.WrongParameterException = Ice.createTempClass()
+    class WrongParameterException(Ice.UserException):
+        def __init__(self, msg=''):
+            self.msg = msg
+
+        def __str__(self):
+            return IcePy.stringifyException(self)
+
+        __repr__ = __str__
+
+        _ice_id = '::device_repo_ice::WrongParameterException'
+
+    _M_device_repo_ice._t_WrongParameterException = IcePy.defineException('::device_repo_ice::WrongParameterException', WrongParameterException, (), False, None, (('msg', (), IcePy._t_string, False, 0),))
+    WrongParameterException._ice_type = _M_device_repo_ice._t_WrongParameterException
+
+    _M_device_repo_ice.WrongParameterException = WrongParameterException
+    del WrongParameterException
 
 _M_device_repo_ice._t_DeviceRack = IcePy.defineValue('::device_repo_ice::DeviceRack', Ice.Value, -1, (), False, True, None, ())
 

@@ -19,12 +19,17 @@ def get_device_module():
         from . import vna_rack
         return vna_rack
 
+    def get_alazar_module():
+        from . import alazar_rack
+        return alazar_rack
+
     device_module_getter = {
         "dummy": get_dummy_module,
         "psg": get_psg_module,
         "keysightsd1": get_keysight_sd1_module,
         "dc_srs": get_dc_srs_module,
-        "vna": get_vna_module
+        "vna": get_vna_module,
+        "alazar": get_alazar_module
     }
 
     return device_module_getter
