@@ -7,11 +7,10 @@ else:
     from .driver.visa_device import VisaDeviceBase, get_device_by_address
 
 
-class VNA_E8363B(VNATemplate, VisaDeviceBase):
+class VNA_Keysight(VNATemplate, VisaDeviceBase):
     def __init__(self, name, dev):
         super().__init__(dev)
         self.name = name
-        dev.read_termination = '\n'
 
     def get_type(self, current=None):
         return DeviceType.VectorNetworkAnalyzer
@@ -81,8 +80,15 @@ class VNA_E8363B(VNATemplate, VisaDeviceBase):
         self.visa_write("INIT:CONT OFF")
 
 
+class VNA_E8363B(VNA_Keysight):
+    def __init__(self, name, dev):
+        super().__init__(name, dev)
+        dev.read_termination = '\n'
+
+
 model_class_map = {
-    'E8363B': VNA_E8363B
+    'E8363B': VNA_E8363B,
+    'N5232B': VNA_Keysight
 }
 
 
