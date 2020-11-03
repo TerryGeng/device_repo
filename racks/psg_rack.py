@@ -44,7 +44,8 @@ class PSG_SRS(PSGTemplate, VisaDeviceBase):
 
 
 def get_parser():
-    parser = get_rack_argv_parser("Start the general PSG rack.")
+    parser = get_rack_argv_parser("Start the general PSG rack. Support: SRS series, "
+                                  "Keysight series, etc.")
 
     parser.add_argument("name_address", nargs="+", type=str,
                         help="name and VISA address of the PSG, in the format of "
@@ -63,7 +64,7 @@ def load_dev(rack, args=None, logger=None):
 
     for name, addr in name_address_pairs:
         dev = get_device_by_address(addr)
-        identifier = f"PSG_SRS_{name}"
+        identifier = f"PSG_{name}"
 
         if logger:
             logger.info(f"Initializing {identifier} at {addr}...")
