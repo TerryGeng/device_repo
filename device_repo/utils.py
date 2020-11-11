@@ -115,12 +115,12 @@ def unpack_data_set(packed):
     elif isinstance(packed, list):
         l = []
         for packed_item in packed:
-            if isinstance(packed, DataSet):
+            if isinstance(packed_item, DataSet):
                 l.append(
                     np.frombuffer(
-                        packed.packed_data,
-                        dtype=to_numpy_data_type(packed.type)
-                    ).reshape(packed.shape)
+                        packed_item.packed_data,
+                        dtype=to_numpy_data_type(packed_item.type)
+                    ).reshape(packed_item.shape)
                 )
             else:
                 raise TypeError("Invalid input! Not a dataset.")
