@@ -228,9 +228,10 @@ class Alazar(DigitizerTemplate):
             for i in range(records_per_buffer_each_channel):
                 buffer_offset = i * interleaved_record_length
                 record_window = buffer[buffer_offset:buffer_offset + interleaved_record_length]
-                a_data[n+i] = record_window[0::2]
-                b_data[n+i] = record_window[1::2]
+                a_data[n*records_per_buffer_each_channel+i] = record_window[0::2]
+                b_data[n*records_per_buffer_each_channel+i] = record_window[1::2]
 
+        assert AlazarAbortAsyncRead(self.handle) == ApiSuccess
         return a_data, b_data
 
     @log_invoke_evt
