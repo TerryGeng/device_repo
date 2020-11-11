@@ -27,7 +27,7 @@ clean:
 	rm -rf device_repo/device_repo_ice/
 
 test: $(PYTHON)
-	$(PYTEST) -x -v --show-capture=log tests/test_dummy.py
+	$(PYTEST) -x -v --show-capture=log tests/test_dummy.py tests/test_dataset.py
 
 build:
 	$(PYTHON) -m pip install wheel

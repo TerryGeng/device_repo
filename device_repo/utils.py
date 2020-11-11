@@ -98,10 +98,11 @@ def pack_data_set(array):
 
     if not isinstance(array, np.ndarray):
         array = np.asarray(array)
-        data_type = to_ice_data_type(array.dtype)
-        packed = array.tobytes()
 
-        return DataSet(array.shape, data_type, packed)
+    data_type = to_ice_data_type(array.dtype)
+    packed = array.tobytes()
+
+    return DataSet(array.shape, data_type, packed)
 
 
 def unpack_data_set(packed):
