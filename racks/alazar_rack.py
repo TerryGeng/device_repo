@@ -39,11 +39,10 @@ class Alazar(DigitizerTemplate):
                  samples_per_record=1024,
                  repeats=512,
                  channel_ranges=(0, 0),
-                 trigger_level=0.0,
+                 trigger_level=1.0,
                  trigger_delay=0,
                  trigger_timeout=0,
-                 records_per_buffer=64,
-                 buffer_count=512,
+                 records_per_buffer=128,
                  read_timeout=1):
         super().__init__()
 
@@ -62,9 +61,8 @@ class Alazar(DigitizerTemplate):
         self.trigger_level = trigger_level
         self.trigger_delay = trigger_delay
         self.trigger_timeout = trigger_timeout
-        self.buffer_count = buffer_count
         self.read_timeout = read_timeout
-        self.sample_rate = 1e9
+        self.sample_rate = 1000000000
 
         self.channel_ranges = channel_ranges
 
@@ -72,54 +70,14 @@ class Alazar(DigitizerTemplate):
 
     def initialize(self):
         assert AlazarSetCaptureClock(
-            self.handle,
-            EXTERNAL_CLOCK_10MHz_REF,
-            self.sample_rate,  # Not all sample rate are allowed. Check the manual.
-            CLOCK_EDGE_RISING,
-            1
-        ) == ApiSuccess
-
-        assert AlazarSetExternalTrigger(
-            self.handle,
-            DC_COUPLING,
-            ETR_5V
-        ) == ApiSuccess
-
-        # Set the data format to be unsigned int
-        assert AlazarSetParameter(
-            self.handle,
-            CHANNEL_A | CHANNEL_B,
-            SET_DATA_FORMAT,
-            DATA_FORMAT_UNSIGNED
-        ) == ApiSuccess
-
-        assert AlazarConfigureAuxIO(
-            self.handle,
-            AUX_OUT_TRIGGER,
-            AUX_OUT_TRIGGER_ENABLE
-        ) == ApiSuccess
-
+            self.handle, EXTERNAL_CLOCK_10MHz_REF, self.sample_rate, CLOCK_EDGE_RISING, U32(1)) == ApiSuccess
         assert AlazarInputControl(
-            self.handle,
-            CHANNEL_A,
-            AC_COUPLING,
-            INPUT_RANGE_PM_400_MV,
-            IMPEDANCE_50_OHM
-        ) == ApiSuccess
-
+            self.handle, CHANNEL_A, AC_COUPLING, INPUT_RANGE_PM_100_MV, IMPEDANCE_50_OHM) == ApiSuccess
         assert AlazarInputControl(
-            self.handle,
-            CHANNEL_B,
-            AC_COUPLING,
-            INPUT_RANGE_PM_400_MV,
-            IMPEDANCE_50_OHM
-        ) == ApiSuccess
-
-        assert AlazarSetParameter(
-            self.handle,
-            0,
-            SETGET_ASYNC_BUFFCOUNT,
-            self.buffer_count) == ApiSuccess
+            self.handle, CHANNEL_B, AC_COUPLING, INPUT_RANGE_PM_100_MV, IMPEDANCE_50_OHM) == ApiSuccess
+        assert AlazarSetExternalTrigger(self.handle, DC_COUPLING, ETR_5V) == ApiSuccess
+        assert AlazarSetParameter(self.handle, CHANNEL_A | CHANNEL_B, SET_DATA_FORMAT, DATA_FORMAT_UNSIGNED) == ApiSuccess
+        assert AlazarConfigureAuxIO(self.handle, AUX_OUT_TRIGGER, AUX_OUT_TRIGGER_ENABLE) == ApiSuccess
 
         self.set_trigger_level(self.trigger_level)
         self.set_trigger_delay(self.trigger_delay)
@@ -156,42 +114,26 @@ class Alazar(DigitizerTemplate):
         self.trigger_level = trigger_level
 
         # convert relative level to U8
-        max_level = 5.0
-        level = int(128 + 127 * trigger_level / max_level)
-        j_level = k_level = level
-
+        trigger_level_volts = trigger_level
+        trigger_range_volts = 5.0
+        triggerLevel_code = U32(int(128 + 127 * (trigger_level_volts / trigger_range_volts)))
         assert AlazarSetTriggerOperation(
-            self.handle,
-            TRIG_ENGINE_OP_J,
-            TRIG_ENGINE_J,
-            TRIG_EXTERNAL,
-            TRIGGER_SLOPE_POSITIVE,
-            j_level,
-            TRIG_ENGINE_K,
-            TRIG_DISABLE,
-            TRIGGER_SLOPE_POSITIVE,
-            k_level
-        ) == ApiSuccess
+            self.handle, TRIG_ENGINE_OP_J, TRIG_ENGINE_J, TRIG_EXTERNAL, TRIGGER_SLOPE_POSITIVE, triggerLevel_code,
+            TRIG_ENGINE_K, TRIG_DISABLE, TRIGGER_SLOPE_POSITIVE, U32(128)) == ApiSuccess
 
     @log_invoke_evt
     def set_trigger_delay(self, delay, current=None):
         self.trigger_delay = delay
-        delay *= self.sample_rat  # timeout in unit of sample clocke
+        delay *= self.sample_rate  # timeout in unit of sample clocke
 
-        assert AlazarSetTriggerDelay(
-            self.handle,
-            delay
-        ) == ApiSuccess
+        assert AlazarSetTriggerDelay(self.handle, delay) == ApiSuccess
 
     @log_invoke_evt
     def set_trigger_timeout(self, timeout, current=None):
         self.trigger_timeout = timeout
         timeout *= self.sample_rate  # timeout in unit of sample clock
 
-        assert AlazarSetTriggerTimeOut(
-            self.handle,
-            timeout
-        ) == ApiSuccess
+        assert AlazarSetTriggerTimeOut(self.handle, timeout) == ApiSuccess
 
     def get_sample_rate(self, current=None):
         return self.sample_rate
@@ -248,15 +190,16 @@ class Alazar(DigitizerTemplate):
         assert AlazarSetRecordSize(
             self.handle,
             0,  # Pre-trigger
-            self.samples_per_record * 2  # Using two channels
+            self.samples_per_record  # Using two channels
         ) == ApiSuccess
 
         assert AlazarBeforeAsyncRead(
             self.handle,
             CHANNEL_A | CHANNEL_B,
-            0,  # Transfer offset
+            0,  # transfer offset
+            self.samples_per_record,
             self.records_per_buffer,
-            self.repeats,
+            2 * self.repeats,
             ADMA_ALLOC_BUFFERS | ADMA_NPT | ADMA_EXTERNAL_STARTCAPTURE | ADMA_INTERLEAVE_SAMPLES
         ) == ApiSuccess
 
@@ -266,15 +209,15 @@ class Alazar(DigitizerTemplate):
 
     def _fetch_data(self):
         assert self.repeats % self.records_per_buffer == 0
-        num_of_buffers = int(self.repeats / self.records_per_buffer)
+        records_per_buffer_each_channel = int(self.records_per_buffer / 2)
+        num_of_buffers = int(self.repeats / records_per_buffer_each_channel)
 
         a_data = np.zeros([self.repeats, self.samples_per_record])
         b_data = np.zeros([self.repeats, self.samples_per_record])
 
-        interleaved_samples_per_buffer = self.records_per_buffer * self.samples_per_record * 2  # *2 for two channel
+        interleaved_record_length = self.samples_per_record * 2
+        interleaved_samples_per_buffer = self.records_per_buffer * self.samples_per_record
         bytes_per_buffer = interleaved_samples_per_buffer  # Samples are in U8 format, == 1 byte each
-
-        interleaved_record_length = 2 * self.samples_per_record
 
         _buffer = (U8 * interleaved_samples_per_buffer)()  # U8 == 1 byte
 
@@ -283,19 +226,18 @@ class Alazar(DigitizerTemplate):
                 self.handle,
                 _buffer,
                 bytes_per_buffer,
-                int(self.read_timeout * 1000)
+                c_ulong(self.read_timeout * 1000)
             )
 
             assert ret_val == ApiSuccess or (n == num_of_buffers - 1 and ret_val == ApiTransferComplete)
 
             buffer = np.asarray(_buffer)
 
-            for i in range(self.records_per_buffer):
-                record_offset = n * self.records_per_buffer + i
-                buffer_offset = i * self.samples_per_record * 2  # samples are interleaved
-                record_window = buffer[buffer_offset:buffer_offset+interleaved_record_length]
-                a_data[record_offset:record_offset+self.samples_per_record] = record_window[0::2]
-                b_data[record_offset:record_offset+self.samples_per_record] = record_window[1::2]
+            for i in range(records_per_buffer_each_channel):
+                buffer_offset = i * interleaved_record_length
+                record_window = buffer[buffer_offset:buffer_offset + interleaved_record_length]
+                a_data[n+i] = record_window[0::2]
+                b_data[n+i] = record_window[1::2]
 
         return a_data, b_data
 
@@ -412,8 +354,8 @@ def load_dev(rack, args=None, logger=None):
         if logger:
             logger.info(f"Initializing {identifier} at {addr}...")
 
-        psg = Alazar(name, addr)
-        rack.load_device(identifier, psg)
+        ats = Alazar(name, addr)
+        rack.load_device(identifier, ats)
 
 
 if __name__ == "__main__":
