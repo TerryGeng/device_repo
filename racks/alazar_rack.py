@@ -1,4 +1,5 @@
-from device_repo.utils import (get_logger, get_rack_argv_parser, log_invoke_evt)
+from device_repo.utils import (get_logger, get_rack_argv_parser, log_invoke_evt,
+                               InvalidParameterException)
 from device_repo import (DigitizerTemplate, DeviceException, WrongParameterException,
                          DoubleDataSet, DeviceType, DeviceRack)
 import logging

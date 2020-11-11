@@ -1,10 +1,11 @@
 from device_repo import AWGTemplate, DeviceRack, DeviceType
-from device_repo.utils import get_logger, get_rack_argv_parser, log_invoke_evt
+from device_repo.utils import (get_logger, get_rack_argv_parser, log_invoke_evt,
+                               InvalidParameterException)
 import numpy as np
 
 if __name__ != "__main__":
     from .driver.keysight_sd1 import (SD_AOU, SD_Waveshapes, SD_TriggerExternalSources,
-        SD_TriggerBehaviors, SD_Wave, SD_WaveformTypes, SD_TriggerModes)
+                                      SD_TriggerBehaviors, SD_Wave, SD_WaveformTypes, SD_TriggerModes)
 else:
     from driver.keysight_sd1 import (SD_AOU, SD_Waveshapes, SD_TriggerExternalSources,
                                      SD_TriggerBehaviors, SD_Wave, SD_WaveformTypes, SD_TriggerModes)
@@ -106,7 +107,7 @@ def load_dev(rack, args=None, logger=None):
         splited = location.split(":")
         if len(splited) != 2 or not isinstance(splited[0], int) or \
                 not isinstance(splited[1], int):
-            parser.print_help()
+            raise InvalidParameterException
         awgs.append((int(splited[0]), int(splited[1])))
 
     for awg in awgs:
@@ -120,6 +121,10 @@ if __name__ == "__main__":
 
     logger = get_logger()
     rack = DeviceRack("KeysightM3202ARack", args.host, args.port, logger)
-    load_dev(rack, args, logger)
+    try:
+        load_dev(rack, args, logger)
+    except InvalidParameterException:
+        parser.print_help()
+        exit(1)
 
     rack.start()

@@ -1,5 +1,6 @@
 from device_repo import PSGTemplate, DeviceRack, DeviceType
-from device_repo.utils import get_logger, get_rack_argv_parser, log_invoke_evt
+from device_repo.utils import (get_logger, get_rack_argv_parser, log_invoke_evt,
+                               InvalidParameterException)
 
 if __name__ == "__main__":
     from driver.visa_device import VisaDeviceBase, get_device_by_address
@@ -59,7 +60,7 @@ def load_dev(rack, args=None, logger=None):
     for name_addr in args.name_address:
         splited = name_addr.split("@")
         if len(splited) != 2:
-            parser.print_help()
+            raise InvalidParameterException
         name_address_pairs.append((splited[0], splited[1]))
 
     for name, addr in name_address_pairs:
@@ -80,6 +81,10 @@ if __name__ == "__main__":
     logger = get_logger()
     rack = DeviceRack("PSGRack", args.host, args.port, logger)
 
-    load_dev(rack, args, logger)
+    try:
+        load_dev(rack, args, logger)
+    except InvalidParameterException:
+        parser.print_help()
+        exit(1)
 
     rack.start()

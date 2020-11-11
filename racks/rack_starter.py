@@ -50,6 +50,7 @@ def start_rack_with_config(start_immediately=True):
                 args = parser.parse_args(argv)
             except SystemExit:
                 print(f"Error: Invalid initialization instruction for {argv[0]}.")
+                parser.print_help()
                 exit(1)
 
             module.load_dev(rack, args, logger)

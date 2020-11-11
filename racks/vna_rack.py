@@ -1,5 +1,6 @@
 from device_repo import VNA, VNATemplate, DeviceRack, DeviceType
-from device_repo.utils import get_logger, get_rack_argv_parser, log_invoke_evt
+from device_repo.utils import (get_logger, get_rack_argv_parser, log_invoke_evt,
+                               InvalidParameterException)
 
 if __name__ == "__main__":
     from driver.visa_device import VisaDeviceBase, get_device_by_address
@@ -10,6 +11,7 @@ else:
 class VNA_Keysight(VNATemplate, VisaDeviceBase):
     def __init__(self, name, dev):
         super().__init__(dev)
+        dev.timeout = 10000
         self.name = name
 
     def get_type(self, current=None):
@@ -127,6 +129,8 @@ def load_dev(rack, args=None, logger=None):
         if model.upper() in model_class_map:
             vna = model_class_map[model.upper()](identifier, dev)
             rack.load_device(identifier, vna)
+        else:
+            raise InvalidParameterException("Invalid device model!")
 
 
 if __name__ == "__main__":
@@ -136,6 +140,11 @@ if __name__ == "__main__":
     logger = get_logger()
     rack = DeviceRack("VNARack", args.host, args.port, logger)
 
-    load_dev(rack, args, logger)
+    try:
+        load_dev(rack, args, logger)
+    except InvalidParameterException as e:
+        print(e)
+        parser.print_help()
+        exit(1)
 
     rack.start()

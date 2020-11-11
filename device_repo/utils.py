@@ -50,3 +50,8 @@ def log_invoke_evt(f):
 
         return f(*args, **kwargs)
     return wrapper
+
+
+class InvalidParameterException(Exception):
+    pass
+
