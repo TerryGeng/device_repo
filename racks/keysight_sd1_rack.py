@@ -81,7 +81,7 @@ class Keysight_M3202A(AWGTemplate):
 def get_parser():
     parser = get_rack_argv_parser("Start the Keysight M3202A rack.")
 
-    parser.add_argument("location", nargs="+", dest="location", type=str,
+    parser.add_argument("location", nargs="+", type=str,
                         help="location of the M3202A, in the format of "
                              "{chasis}:{slot} (multiple instances can be loaded)")
     return parser
