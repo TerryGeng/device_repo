@@ -351,10 +351,10 @@ if 'DigitizerPrx' not in _M_device_repo_ice.__dict__:
     Digitizer._op_get_trigger_delay = IcePy.Operation('get_trigger_delay', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
     Digitizer._op_get_trigger_timeout = IcePy.Operation('get_trigger_timeout', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
     Digitizer._op_start_acquire = IcePy.Operation('start_acquire', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
-    Digitizer._op_acquire_and_fetch_average = IcePy.Operation('acquire_and_fetch_average', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DoubleDataSets, False, 0), ())
-    Digitizer._op_fetch_average = IcePy.Operation('fetch_average', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DoubleDataSets, False, 0), ())
-    Digitizer._op_acquire_and_fetch = IcePy.Operation('acquire_and_fetch', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DoubleDataSets, False, 0), ())
-    Digitizer._op_fetch = IcePy.Operation('fetch', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DoubleDataSets, False, 0), ())
+    Digitizer._op_acquire_and_fetch_average = IcePy.Operation('acquire_and_fetch_average', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DataSets, False, 0), ())
+    Digitizer._op_fetch_average = IcePy.Operation('fetch_average', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DataSets, False, 0), ())
+    Digitizer._op_acquire_and_fetch = IcePy.Operation('acquire_and_fetch', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DataSets, False, 0), ())
+    Digitizer._op_fetch = IcePy.Operation('fetch', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DataSets, False, 0), ())
 
     _M_device_repo_ice.Digitizer = Digitizer
     del Digitizer

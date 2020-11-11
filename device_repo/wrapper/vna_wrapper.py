@@ -4,16 +4,10 @@ VNAPrx = VNA_ice.VNAPrx if hasattr(VNA_ice, "VNAPrx") else VNA_ice._M_device_rep
 
 
 class VNAWrapper(WrapperBase):
+    base_type = VNAPrx
+
     def __init__(self, base: VNAPrx):
         super().__init__(base)
-
-    @staticmethod
-    def checkedCast(proxy, facetOrContext=None, context=None):
-        return VNAWrapper(VNAPrx.checkedCast(proxy, facetOrContext, context))
-
-    @staticmethod
-    def uncheckedCast(proxy, facet=None):
-        return VNAWrapper(VNAPrx.uncheckedCast(proxy, facet))
 
     def get_s(self, channel=1, context=None):
         ret = self.base.get_s(channel, context)

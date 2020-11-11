@@ -20,9 +20,9 @@ module device_repo_ice {
         double get_trigger_timeout();
 
         void start_acquire();
-        DoubleDataSets acquire_and_fetch_average();
-        DoubleDataSets fetch_average();
-        DoubleDataSets acquire_and_fetch();
-        DoubleDataSets fetch();
+        DataSets acquire_and_fetch_average();
+        DataSets fetch_average();
+        DataSets acquire_and_fetch();
+        DataSets fetch();
     }
 }

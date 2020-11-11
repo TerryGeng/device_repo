@@ -4,16 +4,10 @@ DummyDevice = Dummy_ice.DummyDevicePrx if hasattr(Dummy_ice, "DummyDevicePrx") e
 
 
 class DummyWrapper(WrapperBase):
+    base_type = DummyDevice
+
     def __init__(self, base):
         super().__init__(base)
-
-    @staticmethod
-    def checkedCast(proxy, facetOrContext=None, context=None):
-        return DummyWrapper(DummyDevice.checkedCast(proxy, facetOrContext, context))
-
-    @staticmethod
-    def uncheckedCast(proxy, facet=None):
-        return DummyWrapper(DummyDevice.uncheckedCast(proxy, facet))
 
     # -----------------------
     #    Extended method
@@ -21,4 +15,3 @@ class DummyWrapper(WrapperBase):
 
     def get_string_data(self):
         return self.get_data().decode("utf-8")
-

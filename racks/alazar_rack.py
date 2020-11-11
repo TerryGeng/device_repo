@@ -1,7 +1,9 @@
 from device_repo.utils import (get_logger, get_rack_argv_parser, log_invoke_evt,
                                InvalidParameterException)
 from device_repo import (DigitizerTemplate, DeviceException, WrongParameterException,
-                         DoubleDataSet, DeviceType, DeviceRack)
+                         DataSet, DeviceType, DeviceRack)
+from device_repo.utils import pack_data_set
+
 import logging
 import time
 
@@ -172,17 +174,7 @@ class Alazar(DigitizerTemplate):
         a_data_avg = a_data.mean(axis=0)
         b_data_avg = b_data.mean(axis=0)
 
-        datasets = [
-            DoubleDataSet(
-                shape=a_data_avg.shape,
-                array=a_data_avg.flatten()
-            ),
-            DoubleDataSet(
-                shape=b_data_avg.shape,
-                array=b_data_avg.flatten()
-            )
-        ]
-
+        datasets = [pack_data_set(a_data_avg), pack_data_set(b_data_avg)]
         return datasets
 
     @log_invoke_evt
@@ -245,17 +237,7 @@ class Alazar(DigitizerTemplate):
     def fetch_data(self, current=None):
         a_data, b_data = self._fetch_data()
 
-        datasets = [
-            DoubleDataSet(
-                shape=a_data.shape,
-                array=a_data.flatten()
-            ),
-            DoubleDataSet(
-                shape=b_data.shape,
-                array=b_data.flatten()
-            )
-        ]
-
+        datasets = [pack_data_set(a_data), pack_data_set(b_data)]
         return datasets
 
     @staticmethod

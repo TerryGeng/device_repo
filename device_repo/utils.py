@@ -2,6 +2,7 @@ import logging
 from functools import wraps
 
 import IcePy
+import numpy as np
 
 logger = None
 
@@ -54,4 +55,80 @@ def log_invoke_evt(f):
 
 class InvalidParameterException(Exception):
     pass
+
+
+def to_ice_data_type(np_type):
+    from device_repo import DataType
+    if np_type == np.dtype(np.bool):
+        return DataType.Bool
+    elif np_type == np.dtype(np.byte):
+        return DataType.Byte
+    elif np_type == np.dtype(np.short):
+        return DataType.Short
+    elif np_type == np.dtype(np.int16):
+        return DataType.Int
+    elif np_type == np.dtype(np.float):
+        return DataType.Float
+    elif np_type == np.dtype(np.double):
+        return DataType.Double
+    else:
+        raise TypeError("Unknown data type!")
+
+
+def to_numpy_data_type(ice_type):
+    from device_repo import DataType
+    if ice_type == DataType.Bool:
+        return np.dtype(np.bool)
+    elif ice_type == DataType.Byte:
+        return np.dtype(np.byte)
+    elif ice_type == DataType.Short:
+        return np.dtype(np.short)
+    elif ice_type == DataType.Int:
+        return np.dtype(np.int16)
+    elif ice_type == DataType.Float:
+        return np.dtype(np.float)
+    elif ice_type == DataType.Double:
+        return np.dtype(np.double)
+    else:
+        raise TypeError("Unknown data type!")
+
+
+def pack_data_set(array):
+    from device_repo import DataSet
+
+    if not isinstance(array, np.ndarray):
+        array = np.asarray(array)
+        data_type = to_ice_data_type(array.dtype)
+        packed = array.tobytes()
+
+        return DataSet(array.shape, data_type, packed)
+
+
+def unpack_data_set(packed):
+    from device_repo import DataSet
+
+    if isinstance(packed, DataSet):
+        return np.frombuffer(
+            packed.packed_data,
+            dtype=to_numpy_data_type(packed.type)
+        ).reshape(packed.shape)
+    elif isinstance(packed, list):
+        l = []
+        for packed_item in packed:
+            if isinstance(packed, DataSet):
+                l.append(
+                    np.frombuffer(
+                        packed.packed_data,
+                        dtype=to_numpy_data_type(packed.type)
+                    ).reshape(packed.shape)
+                )
+            else:
+                raise TypeError("Invalid input! Not a dataset.")
+        return l
+    else:
+        raise TypeError("Invalid input! Not a dataset.")
+
+
+
+
 

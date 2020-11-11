@@ -3,7 +3,11 @@ from .device_repo_ice import (device_type_ice, AWG_ice, Dummy_ice, PSG_ice,
                               DCSource_ice, visa_device_ice, VNA_ice, Digitizer_ice)
 
 DeviceType = device_type_ice.DeviceType if hasattr(device_type_ice, "DeviceType") else device_type_ice._M_device_repo_ice.DeviceType
+DataType = device_type_ice.DataType if hasattr(device_type_ice, "DataType") else device_type_ice._M_device_repo_ice.DataType
+DataSet = device_type_ice.DataSet if hasattr(device_type_ice, "DataSet") else device_type_ice._M_device_repo_ice.DataSet
 DoubleDataSet = device_type_ice.DoubleDataSet if hasattr(device_type_ice, "DoubleDataSet") else device_type_ice._M_device_repo_ice.DoubleDataSet
+IntDataSet = device_type_ice.IntDataSet if hasattr(device_type_ice, "IntDataSet") else device_type_ice._M_device_repo_ice.IntDataSet
+ByteDataSet = device_type_ice.ByteDataSet if hasattr(device_type_ice, "ByteDataSet") else device_type_ice._M_device_repo_ice.ByteDataSet
 
 DeviceRepo = device_repo_ice_.DeviceRepoPrx if hasattr(device_repo_ice_, "DeviceRepoPrx") else device_repo_ice_._M_device_repo_ice.DeviceRepoPrx
 DeviceStatus = device_repo_ice_.DeviceStatus if hasattr(device_repo_ice_, "DeviceStatus") else device_repo_ice_._M_device_repo_ice.DeviceStatus
@@ -33,8 +37,9 @@ from .wrapper.vna_wrapper import VNAWrapper
 VNATemplate = VNA_ice.VNA if hasattr(VNA_ice, "VNA") else VNA_ice._M_device_repo_ice.VNA
 VNA = VNAWrapper
 
+from .wrapper.digitizer_wrapper import DigitizerWrapper
 DigitizerTemplate = Digitizer_ice.Digitizer if hasattr(Digitizer_ice, "Digitizer") else Digitizer_ice._M_device_repo_ice.Digitizer
-Digitizer = Digitizer_ice.DigitizerPrx if hasattr(Digitizer_ice, "DigitizerPrx") else Digitizer_ice._M_device_repo_ice.DigitizerPrx
+Digitizer = DigitizerWrapper
 
 from .access import DeviceRepoAccess
 from .rack import DeviceRackI as DeviceRack

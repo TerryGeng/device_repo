@@ -10,7 +10,7 @@ setup(
     description="Remote device access solution based on Zeroc ICE.",
     keywords="remote device",
     platforms="any",
-    install_requires=["zeroc-ice", "pyyaml"],
+    install_requires=["zeroc-ice", "pyyaml", "numpy"],
     classifiers=[
         "License :: OSI Approved :: GNU Lesser General Public License v2 "
         "or later (LGPLv2+)",
