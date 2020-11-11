@@ -186,6 +186,42 @@ if 'DigitizerPrx' not in _M_device_repo_ice.__dict__:
         def end_get_trigger_timeout(self, _r):
             return _M_device_repo_ice.Digitizer._op_get_trigger_timeout.end(self, _r)
 
+        def start_acquire(self, context=None):
+            return _M_device_repo_ice.Digitizer._op_start_acquire.invoke(self, ((), context))
+
+        def start_acquireAsync(self, context=None):
+            return _M_device_repo_ice.Digitizer._op_start_acquire.invokeAsync(self, ((), context))
+
+        def begin_start_acquire(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.Digitizer._op_start_acquire.begin(self, ((), _response, _ex, _sent, context))
+
+        def end_start_acquire(self, _r):
+            return _M_device_repo_ice.Digitizer._op_start_acquire.end(self, _r)
+
+        def acquire_and_fetch_average(self, context=None):
+            return _M_device_repo_ice.Digitizer._op_acquire_and_fetch_average.invoke(self, ((), context))
+
+        def acquire_and_fetch_averageAsync(self, context=None):
+            return _M_device_repo_ice.Digitizer._op_acquire_and_fetch_average.invokeAsync(self, ((), context))
+
+        def begin_acquire_and_fetch_average(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.Digitizer._op_acquire_and_fetch_average.begin(self, ((), _response, _ex, _sent, context))
+
+        def end_acquire_and_fetch_average(self, _r):
+            return _M_device_repo_ice.Digitizer._op_acquire_and_fetch_average.end(self, _r)
+
+        def fetch_average(self, context=None):
+            return _M_device_repo_ice.Digitizer._op_fetch_average.invoke(self, ((), context))
+
+        def fetch_averageAsync(self, context=None):
+            return _M_device_repo_ice.Digitizer._op_fetch_average.invokeAsync(self, ((), context))
+
+        def begin_fetch_average(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.Digitizer._op_fetch_average.begin(self, ((), _response, _ex, _sent, context))
+
+        def end_fetch_average(self, _r):
+            return _M_device_repo_ice.Digitizer._op_fetch_average.end(self, _r)
+
         def acquire_and_fetch(self, context=None):
             return _M_device_repo_ice.Digitizer._op_acquire_and_fetch.invoke(self, ((), context))
 
@@ -209,18 +245,6 @@ if 'DigitizerPrx' not in _M_device_repo_ice.__dict__:
 
         def end_fetch(self, _r):
             return _M_device_repo_ice.Digitizer._op_fetch.end(self, _r)
-
-        def start_acquire(self, context=None):
-            return _M_device_repo_ice.Digitizer._op_start_acquire.invoke(self, ((), context))
-
-        def start_acquireAsync(self, context=None):
-            return _M_device_repo_ice.Digitizer._op_start_acquire.invokeAsync(self, ((), context))
-
-        def begin_start_acquire(self, _response=None, _ex=None, _sent=None, context=None):
-            return _M_device_repo_ice.Digitizer._op_start_acquire.begin(self, ((), _response, _ex, _sent, context))
-
-        def end_start_acquire(self, _r):
-            return _M_device_repo_ice.Digitizer._op_start_acquire.end(self, _r)
 
         @staticmethod
         def checkedCast(proxy, facetOrContext=None, context=None):
@@ -290,14 +314,20 @@ if 'DigitizerPrx' not in _M_device_repo_ice.__dict__:
         def get_trigger_timeout(self, current=None):
             raise NotImplementedError("servant method 'get_trigger_timeout' not implemented")
 
+        def start_acquire(self, current=None):
+            raise NotImplementedError("servant method 'start_acquire' not implemented")
+
+        def acquire_and_fetch_average(self, current=None):
+            raise NotImplementedError("servant method 'acquire_and_fetch_average' not implemented")
+
+        def fetch_average(self, current=None):
+            raise NotImplementedError("servant method 'fetch_average' not implemented")
+
         def acquire_and_fetch(self, current=None):
             raise NotImplementedError("servant method 'acquire_and_fetch' not implemented")
 
         def fetch(self, current=None):
             raise NotImplementedError("servant method 'fetch' not implemented")
-
-        def start_acquire(self, current=None):
-            raise NotImplementedError("servant method 'start_acquire' not implemented")
 
         def __str__(self):
             return IcePy.stringify(self, _M_device_repo_ice._t_DigitizerDisp)
@@ -320,9 +350,11 @@ if 'DigitizerPrx' not in _M_device_repo_ice.__dict__:
     Digitizer._op_get_trigger_level = IcePy.Operation('get_trigger_level', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
     Digitizer._op_get_trigger_delay = IcePy.Operation('get_trigger_delay', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
     Digitizer._op_get_trigger_timeout = IcePy.Operation('get_trigger_timeout', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
+    Digitizer._op_start_acquire = IcePy.Operation('start_acquire', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
+    Digitizer._op_acquire_and_fetch_average = IcePy.Operation('acquire_and_fetch_average', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DoubleDataSets, False, 0), ())
+    Digitizer._op_fetch_average = IcePy.Operation('fetch_average', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DoubleDataSets, False, 0), ())
     Digitizer._op_acquire_and_fetch = IcePy.Operation('acquire_and_fetch', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DoubleDataSets, False, 0), ())
     Digitizer._op_fetch = IcePy.Operation('fetch', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DoubleDataSets, False, 0), ())
-    Digitizer._op_start_acquire = IcePy.Operation('start_acquire', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
 
     _M_device_repo_ice.Digitizer = Digitizer
     del Digitizer
