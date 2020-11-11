@@ -1,13 +1,14 @@
 import Ice
 
 from device_repo import (DeviceType, DeviceRepo, DeviceStatus,
-                         DummyDevice, AWG, PSG, VNA)
+                         DummyDevice, AWG, PSG, VNA, Digitizer)
 
 DEVICE_MAP = {
     DeviceType.Dummy: DummyDevice,
     DeviceType.ArbitraryWaveformGenerator: AWG,
     DeviceType.ParametricSignalGenerator: PSG,
-    DeviceType.VectorNetworkAnalyzer: VNA
+    DeviceType.VectorNetworkAnalyzer: VNA,
+    DeviceType.Digitizer: Digitizer
 }
 
 
@@ -20,6 +21,7 @@ class DeviceRepoAccess:
         ice_props.setProperty("Ice.ACM.Close", "0")  # CloseOff
         # Heartbeat is sent by the server side.
         ice_props.setProperty("Ice.ACM.Heartbeat", "0")  # HeartbeatOff
+        ice_props.setProperty("Ice.MessageSizeMax", "20000")  # 20MB
 
         ice_init_data = Ice.InitializationData()
         ice_init_data.properties = ice_props

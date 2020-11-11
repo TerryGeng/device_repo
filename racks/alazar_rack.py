@@ -1,4 +1,4 @@
-from device_repo.utils import get_logger, get_rack_argv_parser, log_invoke_evt
+from device_repo.utils import (get_logger, get_rack_argv_parser, log_invoke_evt)
 from device_repo import (DigitizerTemplate, DeviceException, WrongParameterException,
                          DoubleDataSet, DeviceType, DeviceRack)
 import logging
@@ -7,21 +7,43 @@ import time
 import numpy as np
 import re
 
-from racks.driver.alazar import alazar_wrapper
-from racks.driver.alazar import alazar_api
-from racks.driver.alazar.alazar_wrapper import (AlazarTechDigitizer, AutoDMA, DMABufferArray)
+from racks.driver.alazar.api import *
+from racks.driver.alazar.constants import *
+from racks.driver.alazar.error_code import *
+
+
+# The rack program of Alazar's AWG series.
+# I tried to call all Alazar's API without any wrapping to
+#  1. avoid unnecessary confusion,
+#  2. help other reader navigate through Alazar's SDK manual,
+# But basically the adversary effect is this piece of code is a
+# mixture of traditional python code and "C-style" code.
+
+# Note on sample, record and buffer:
+#  Sample is a numeric value, indicate the amplitude of the signal at one
+#  specific time. Each record is comprised of a number of records.
+#  Alazar device takes one record after being triggered once. The record
+#  is saved directly to the on-board buffer of the device.
+#  Users can specify the number of records saved in one buffer, and
+#  fetch back that buffer after that buffer is completed (is filled
+#  by records). You CANNOT fetch data back unless the buffer is completed.
+#
+#  Number of samples per record = samples_per_record (each channel) * channels
+#  Total number of records we get = records_per_buffer
+#  Total number of samples we get = records_per_buffer * samples_per_channel * channels
 
 
 class Alazar(DigitizerTemplate):
     def __init__(self, name, addr, *,
-                 sample_per_records=1024,
+                 samples_per_record=1024,
                  repeats=512,
                  channel_ranges=(0, 0),
                  trigger_level=0.0,
-                 trigger_delay=0.0,
-                 trigger_timeout=0.0,
+                 trigger_delay=0,
+                 trigger_timeout=0,
                  records_per_buffer=64,
-                 buffer_count=512):
+                 buffer_count=512,
+                 read_timeout=1):
         super().__init__()
 
         self.name = name
@@ -31,72 +53,98 @@ class Alazar(DigitizerTemplate):
         self.model = dict_parse.get('model', None)
         self.system_id = dict_parse.get('systemID', 1)
         self.board_id = dict_parse.get('boardID', 1)
-        self.handle = AlazarTechDigitizer(self.system_id, self.board_id)
+        self.handle = AlazarGetBoardBySystemID(self.system_id, self.board_id)
 
-        self.sample_per_records = self.align_samples_per_record(sample_per_records)
+        self.samples_per_record = self.align_samples_per_record(samples_per_record)
         self.records_per_buffer = records_per_buffer
         self.repeats = repeats
         self.trigger_level = trigger_level
         self.trigger_delay = trigger_delay
         self.trigger_timeout = trigger_timeout
         self.buffer_count = buffer_count
+        self.read_timeout = read_timeout
+        self.sample_rate = 1e9
 
         self.channel_ranges = channel_ranges
 
-        # self.config['e'] = self.get_exp_array(
-        #     self.config['fft_freq_list'], self.config['n'],
-        #     self.config['weight'],
-        #     self.config['sampleRate']
-        # )
-
         self.initialize()
-        self.configure()
 
     def initialize(self):
-        self.handle.setCaptureClock(alazar_api.EXTERNAL_CLOCK_10MHz_REF, alazar_api.SAMPLE_RATE_1GSPS)
-        self.handle.setBWLimit(alazar_api.CHANNEL_A, 0)
-        self.handle.setBWLimit(alazar_api.CHANNEL_B, 0)
-        self.handle.setExternalTrigger(alazar_api.DC_COUPLING)
-        self.handle.configureAuxIO(alazar_api.AUX_OUT_TRIGGER, 0)
-        self.handle.setParameter(0, alazar_api.SET_DATA_FORMAT, alazar_api.DATA_FORMAT_UNSIGNED)
+        assert AlazarSetCaptureClock(
+            self.handle,
+            EXTERNAL_CLOCK_10MHz_REF,
+            self.sample_rate,  # Not all sample rate are allowed. Check the manual.
+            CLOCK_EDGE_RISING,
+            1
+        ) == ApiSuccess
 
-    def configure(self):
-        self.handle.inputControl(alazar_api.CHANNEL_A, alazar_api.DC_COUPLING,
-                                 alazar_wrapper.getInputRange(self.channel_ranges[0], self.handle.kind),
-                                 alazar_api.IMPEDANCE_50_OHM)
-        self.handle.inputControl(alazar_api.CHANNEL_B, alazar_api.DC_COUPLING,
-                                 alazar_wrapper.getInputRange(self.channel_ranges[1], self.handle.kind),
-                                 alazar_api.IMPEDANCE_50_OHM)
+        assert AlazarSetExternalTrigger(
+            self.handle,
+            DC_COUPLING,
+            ETR_5V
+        ) == ApiSuccess
 
-        # convert relative level to U8
-        maxLevel = 5.0
-        Level = int(128 + 127 * self.trigger_level / maxLevel)
-        JLevel = Level
-        KLevel = Level
-        self.handle.setTriggerOperation(
-            alazar_api.TRIG_ENGINE_OP_J, alazar_api.TRIG_ENGINE_J, alazar_api.TRIG_EXTERNAL,
-            alazar_api.TRIGGER_SLOPE_POSITIVE, JLevel, alazar_api.TRIG_ENGINE_K,
-            alazar_api.TRIG_DISABLE, alazar_api.TRIGGER_SLOPE_POSITIVE, KLevel)
+        # Set the data format to be unsigned int
+        assert AlazarSetParameter(
+            self.handle,
+            CHANNEL_A | CHANNEL_B,
+            SET_DATA_FORMAT,
+            DATA_FORMAT_UNSIGNED
+        ) == ApiSuccess
 
-        self.handle.setTriggerDelay(self.trigger_delay)
-        self.handle.setTriggerTimeOut(self.trigger_timeout)
+        assert AlazarConfigureAuxIO(
+            self.handle,
+            AUX_OUT_TRIGGER,
+            AUX_OUT_TRIGGER_ENABLE
+        ) == ApiSuccess
 
-        self.handle.setParameter(0, alazar_api.SETGET_ASYNC_BUFFCOUNT, self.buffer_count)
+        assert AlazarInputControl(
+            self.handle,
+            CHANNEL_A,
+            AC_COUPLING,
+            INPUT_RANGE_PM_400_MV,
+            IMPEDANCE_50_OHM
+        ) == ApiSuccess
+
+        assert AlazarInputControl(
+            self.handle,
+            CHANNEL_B,
+            AC_COUPLING,
+            INPUT_RANGE_PM_400_MV,
+            IMPEDANCE_50_OHM
+        ) == ApiSuccess
+
+        assert AlazarSetParameter(
+            self.handle,
+            0,
+            SETGET_ASYNC_BUFFCOUNT,
+            self.buffer_count) == ApiSuccess
+
+        self.set_trigger_level(self.trigger_level)
+        self.set_trigger_delay(self.trigger_delay)
+        self.set_trigger_timeout(self.trigger_timeout)
 
     def get_type(self, current=None):
         return DeviceType.Digitizer
 
     @log_invoke_evt
     def set_sample_number(self, number_of_samples, current=None):
-        self.sample_per_records = self.align_samples_per_record(number_of_samples)
+        self.samples_per_record = self.align_samples_per_record(number_of_samples)
 
     @log_invoke_evt
     def set_input_range(self, channel, _range, current=None):
-        if channel not in [0, 1]:
+        if channel not in [1, 2]:
             raise WrongParameterException(
                 "There are only two channels: channel 0 and channel 1.")
-        self.channel_ranges[channel] = _range
-        self.configure()
+        self.channel_ranges[channel], range_converted = self._convert_input_range(_range)
+
+        assert AlazarInputControl(
+            self.handle,
+            channel,
+            DC_COUPLING,
+            range_converted,
+            IMPEDANCE_50_OHM
+        ) == ApiSuccess
 
     @log_invoke_evt
     def set_repeats(self, repeats, current=None):
@@ -105,23 +153,50 @@ class Alazar(DigitizerTemplate):
     @log_invoke_evt
     def set_trigger_level(self, trigger_level, current=None):
         self.trigger_level = trigger_level
-        self.configure()
+
+        # convert relative level to U8
+        max_level = 5.0
+        level = int(128 + 127 * trigger_level / max_level)
+        j_level = k_level = level
+
+        assert AlazarSetTriggerOperation(
+            self.handle,
+            TRIG_ENGINE_OP_J,
+            TRIG_ENGINE_J,
+            TRIG_EXTERNAL,
+            TRIGGER_SLOPE_POSITIVE,
+            j_level,
+            TRIG_ENGINE_K,
+            TRIG_DISABLE,
+            TRIGGER_SLOPE_POSITIVE,
+            k_level
+        ) == ApiSuccess
 
     @log_invoke_evt
     def set_trigger_delay(self, delay, current=None):
         self.trigger_delay = delay
-        self.configure()
+        delay *= self.sample_rat  # timeout in unit of sample clocke
+
+        assert AlazarSetTriggerDelay(
+            self.handle,
+            delay
+        ) == ApiSuccess
 
     @log_invoke_evt
     def set_trigger_timeout(self, timeout, current=None):
         self.trigger_timeout = timeout
-        self.configure()
+        timeout *= self.sample_rate  # timeout in unit of sample clock
+
+        assert AlazarSetTriggerTimeOut(
+            self.handle,
+            timeout
+        ) == ApiSuccess
 
     def get_sample_rate(self, current=None):
-        return 1e9
+        return self.sample_rate
 
     def get_sample_number(self, current=None):
-        return self.get_sample_number()
+        return self.samples_per_records
 
     def get_input_range(self, channel, current=None):
         if channel not in [0, 1]:
@@ -142,13 +217,91 @@ class Alazar(DigitizerTemplate):
     def get_trigger_timeout(self, current=None):
         return self.trigger_timeout
 
-    def _get_buffer_count(self, buffer_count):
-        self.buffer_count = buffer_count
-        self.configure()
+    @log_invoke_evt
+    def acquire_and_fetch(self, current=None):
+        self.start_acquire()
+        return self.fetch_data()
 
     @log_invoke_evt
-    def acquire(self, current=None):
-        a_data, b_data = self.get_data()
+    def acquire_and_fetch_average(self, current=None):
+        self.start_acquire()
+        a_data, b_data = self._fetch_data()
+        a_data_avg = a_data.mean(axis=0)
+        b_data_avg = b_data.mean(axis=0)
+
+        datasets = [
+            DoubleDataSet(
+                shape=a_data_avg.shape,
+                array=a_data_avg.flatten()
+            ),
+            DoubleDataSet(
+                shape=b_data_avg.shape,
+                array=b_data_avg.flatten()
+            )
+        ]
+
+        return datasets
+
+    @log_invoke_evt
+    def start_acquire(self, current=None):
+        assert AlazarSetRecordSize(
+            self.handle,
+            0,  # Pre-trigger
+            self.samples_per_record * 2  # Using two channels
+        ) == ApiSuccess
+
+        assert AlazarBeforeAsyncRead(
+            self.handle,
+            CHANNEL_A | CHANNEL_B,
+            0,  # Transfer offset
+            self.records_per_buffer,
+            self.repeats,
+            ADMA_ALLOC_BUFFERS | ADMA_NPT | ADMA_EXTERNAL_STARTCAPTURE | ADMA_INTERLEAVE_SAMPLES
+        ) == ApiSuccess
+
+        assert AlazarStartCapture(
+            self.handle
+        ) == ApiSuccess
+
+    def _fetch_data(self):
+        assert self.repeats % self.records_per_buffer == 0
+        num_of_buffers = int(self.repeats / self.records_per_buffer)
+
+        a_data = np.zeros([self.repeats, self.samples_per_record])
+        b_data = np.zeros([self.repeats, self.samples_per_record])
+
+        interleaved_samples_per_buffer = self.records_per_buffer * self.samples_per_record * 2  # *2 for two channel
+        bytes_per_buffer = interleaved_samples_per_buffer  # Samples are in U8 format, == 1 byte each
+
+        interleaved_record_length = 2 * self.samples_per_record
+
+        _buffer = (U8 * interleaved_samples_per_buffer)()  # U8 == 1 byte
+
+        for n in range(num_of_buffers):
+            ret_val = AlazarWaitNextAsyncBufferComplete(
+                self.handle,
+                _buffer,
+                bytes_per_buffer,
+                int(self.read_timeout * 1000)
+            )
+
+            assert ret_val == ApiSuccess or (n == num_of_buffers - 1 and ret_val == ApiTransferComplete)
+
+            buffer = np.asarray(_buffer)
+
+            for i in range(self.records_per_buffer):
+                record_offset = n * self.records_per_buffer + i
+                buffer_offset = i * self.samples_per_record * 2  # samples are interleaved
+                record_window = buffer[buffer_offset:buffer_offset+interleaved_record_length]
+                a_data[record_offset:record_offset+self.samples_per_record] = record_window[0::2]
+                b_data[record_offset:record_offset+self.samples_per_record] = record_window[1::2]
+
+        return a_data, b_data
+
+    @log_invoke_evt
+    def fetch_data(self, current=None):
+        a_data, b_data = self._fetch_data()
+
         datasets = [
             DoubleDataSet(
                 shape=a_data.shape,
@@ -159,87 +312,8 @@ class Alazar(DigitizerTemplate):
                 array=b_data.flatten()
             )
         ]
+
         return datasets
-
-    def _acquire_data(self, samples_per_record, repeats, buffers, records_per_buffer,
-                      timeout):
-        with AutoDMA(self.handle,
-                     samples_per_record,
-                     repeats=repeats,
-                     buffers=buffers,
-                     recordsPerBuffer=records_per_buffer,
-                     timeout=timeout) as h:
-            yield from h.read()
-
-    def get_data(self, avg=False):
-        samples_per_record = self.sample_per_records
-        records_per_buffer = self.records_per_buffer
-        repeats = self.repeats
-        e = self.config['e']
-        n = e.shape[0]
-
-        a = np.zeros([repeats, records_per_buffer*samples_per_record])
-        b = np.zeros([repeats, records_per_buffer*samples_per_record])
-
-        retry = 0  # What this this?
-        n = 0
-
-        for chA, chB in self._acquire_data(
-                samples_per_record,
-                repeats=repeats,
-                buffers=None,
-                records_per_buffer=records_per_buffer,
-                timeout=1):
-
-            n += records_per_buffer
-
-            a_lst = chA.reshape((records_per_buffer, samples_per_record))
-            b_lst = chB.reshape((records_per_buffer, samples_per_record))
-
-            a[n:records_per_buffer] = a_lst
-            b[n:records_per_buffer] = b_lst
-
-            if repeats == 0:
-                break
-        if avg:
-            return a.mean(axis=0), b.mean(axis=0)
-        else:
-            return a, b
-
-        # while retry < 3:
-        #     try:
-        #         for chA, chB in self._acquire_data(
-        #                 samples_per_record,
-        #                 repeats=repeats,
-        #                 buffers=None,
-        #                 records_per_buffer=records_per_buffer,
-        #                 timeout=1):
-        #             A_lst = chA.reshape((records_per_buffer, samples_per_record))
-        #             B_lst = chB.reshape((records_per_buffer, samples_per_record))
-        #             if fft:
-        #                 A_lst = (A_lst[:, :n]).dot(e) / n
-        #                 B_lst = (B_lst[:, :n]).dot(e) / n
-        #             try:
-        #                 A = np.r_[A, A_lst]
-        #                 B = np.r_[B, B_lst]
-        #             except:
-        #                 A, B = A_lst, B_lst
-        #             if repeats == 0 and A.shape[1] >= maxlen:
-        #                 break
-        #         if avg:
-        #             return A.mean(axis=0), B.mean(axis=0)
-        #         else:
-        #             return A, B
-        #     except AlazarTechError as err:
-        #         log.exception(err.msg)
-        #         if err.code == 518:
-        #             raise SystemExit(2)
-        #         else:
-        #             pass
-        #     time.sleep(0.1)
-        #     retry += 1
-        # else:
-        #     raise SystemExit(1)
 
     @staticmethod
     def align_samples_per_record(num_of_points):
@@ -253,16 +327,6 @@ class Alazar(DigitizerTemplate):
             repeats = (repeats // self.records_per_buffer + 1) * self.records_per_buffer
         return repeats
 
-    # @staticmethod
-    # def get_exp_array(fft_freq_list, numOfPoints, weight=None, sampleRate=1e9):
-    #     e = []
-    #     t = np.arange(0, numOfPoints, 1) / sampleRate
-    #     if weight is None:
-    #         weight = np.ones(numOfPoints)
-    #     for f in fft_freq_list:
-    #         e.append(weight * np.exp(-1j * 2 * np.pi * f * t))
-    #     return np.asarray(e).T
-
     @staticmethod
     def _parse_addr(addr):
         ats_addr = re.compile(
@@ -271,12 +335,55 @@ class Alazar(DigitizerTemplate):
         m = ats_addr.search(addr)
         if m is None:
             raise WrongParameterException('ATS address error!')
-        model = 'ATS'+str(m.group(1))  # ATS 9360|9850|9870
+        model = 'ATS' + str(m.group(1))  # ATS 9360|9850|9870
         system_id = int(m.group(2))
         board_id = int(m.group(3))
         return dict(model=model,
                     systemID=system_id,
                     boardID=board_id)
+
+    def _convert_input_range(self, range_to_convert):
+        input_conversion_table = {
+            INPUT_RANGE_PM_20_MV: 0.02,
+            INPUT_RANGE_PM_40_MV: 0.04,
+            INPUT_RANGE_PM_50_MV: 0.05,
+            INPUT_RANGE_PM_80_MV: 0.08,
+            INPUT_RANGE_PM_100_MV: 0.1,
+            INPUT_RANGE_PM_200_MV: 0.2,
+            INPUT_RANGE_PM_400_MV: 0.4,
+            INPUT_RANGE_PM_500_MV: 0.5,
+            INPUT_RANGE_PM_800_MV: 0.8,
+            INPUT_RANGE_PM_1_V: 1.0,
+            INPUT_RANGE_PM_2_V: 2.0,
+            INPUT_RANGE_PM_4_V: 4.0,
+            INPUT_RANGE_PM_5_V: 5.0,
+            INPUT_RANGE_PM_8_V: 8.0,
+            INPUT_RANGE_PM_10_V: 10.0,
+            INPUT_RANGE_PM_20_V: 20.0,
+            INPUT_RANGE_PM_40_V: 40.0,
+            INPUT_RANGE_PM_16_V: 16.0,
+            INPUT_RANGE_PM_1_V_25: 1.25,
+            INPUT_RANGE_PM_2_V_5: 2.5,
+            INPUT_RANGE_PM_125_MV: 0.125,
+            INPUT_RANGE_PM_250_MV: 0.25
+        }
+
+        if self.model in [ATS9325, ATS9350, ATS9850, ATS9870]:
+            available = [
+                INPUT_RANGE_PM_40_MV, INPUT_RANGE_PM_100_MV, INPUT_RANGE_PM_200_MV,
+                INPUT_RANGE_PM_400_MV, INPUT_RANGE_PM_1_V, INPUT_RANGE_PM_2_V,
+                INPUT_RANGE_PM_4_V
+            ]
+        elif self.model in [ATS9351, ATS9360]:
+            available = [INPUT_RANGE_PM_400_MV]
+        else:
+            raise DeviceException("Unknown ATS model.")
+
+        for option in available:
+            if input_conversion_table[option] > range_to_convert:
+                return input_conversion_table[option], option
+
+        return input_conversion_table[available[-1]], available[-1]
 
 
 def get_parser():

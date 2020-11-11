@@ -157,6 +157,8 @@ class DeviceRackI(DeviceRack):
         ice_props.setProperty("Ice.ThreadPool.Server.Size", "1")
         ice_props.setProperty("Ice.ThreadPool.Server.SizeMax", "10")
 
+        ice_props.setProperty("Ice.MessageSizeMax", "20000")  # 20MB
+
         ice_init_data = Ice.InitializationData()
         ice_init_data.properties = ice_props
 
