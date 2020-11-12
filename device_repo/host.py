@@ -7,7 +7,7 @@ from typing import List
 
 from .device_repo_ice import (DeviceRepo, DeviceType, DeviceStatus, DevicePrx,
                               DeviceEntry, UnknownDeviceException,
-                              DeviceOccupiedException)
+                              DeviceOccupiedException, DeviceReacquiredException)
 
 Device = namedtuple('Device', ['id', 'type', 'rack', 'token'])
 
@@ -69,6 +69,7 @@ class DeviceRepoI(DeviceRepo):
             if self.device_user_map[_id] == current.con:
                 self.logger.info(f"Client {current.con.toString()} attempts to reacquire"
                                  f" device {_id}.")
+                raise DeviceReacquiredException
             else:
                 self.logger.warning(f"Client {current.con.toString()} attempted to "
                                     f"acquire occupied device {_id} of "

@@ -21,6 +21,7 @@ module device_repo_ice {
 
     exception InvalidTokenException {};
     exception DeviceOccupiedException {};
+    exception DeviceReacquiredException {};
     exception UnknownDeviceException {};
 
     exception DeviceException {
@@ -42,7 +43,7 @@ module device_repo_ice {
         DeviceEntries list_devices();
         DeviceStatus check_device_status(string id) throws UnknownDeviceException;
         DeviceType get_device_type(string id) throws UnknownDeviceException;
-        Object* acquire_device(string id) throws DeviceOccupiedException, UnknownDeviceException;
+        Object* acquire_device(string id) throws DeviceOccupiedException, UnknownDeviceException, DeviceReacquiredException;
         void release_device(string id) throws DeviceOccupiedException, UnknownDeviceException;
         DeviceEntries list_acquired_devices();
 

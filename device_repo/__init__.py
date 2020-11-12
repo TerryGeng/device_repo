@@ -14,6 +14,7 @@ DeviceRepo = device_repo_ice_.DeviceRepoPrx if hasattr(device_repo_ice_, "Device
 DeviceStatus = device_repo_ice_.DeviceStatus if hasattr(device_repo_ice_, "DeviceStatus") else device_repo_ice_._M_device_repo_ice.DeviceStatus
 
 DeviceOccupiedException = device_repo_ice_.DeviceOccupiedException if hasattr(device_repo_ice_, "DeviceOccupiedException") else device_repo_ice_._M_device_repo_ice.DeviceOccupiedException
+DeviceReacquiredException = device_repo_ice_.DeviceReacquiredException if hasattr(device_repo_ice_, "DeviceReacquiredException") else device_repo_ice_._M_device_repo_ice.DeviceReacquiredException
 UnknownDeviceException = device_repo_ice_.UnknownDeviceException if hasattr(device_repo_ice_, "UnknownDeviceException") else device_repo_ice_._M_device_repo_ice.UnknownDeviceException
 DeviceException = device_repo_ice_.DeviceException if hasattr(device_repo_ice_, "DeviceException") else device_repo_ice_._M_device_repo_ice.DeviceException
 WrongParameterException = device_repo_ice_.WrongParameterException if hasattr(device_repo_ice_, "WrongParameterException") else device_repo_ice_._M_device_repo_ice.WrongParameterException

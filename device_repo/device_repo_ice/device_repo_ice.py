@@ -243,6 +243,25 @@ if 'DeviceOccupiedException' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice.DeviceOccupiedException = DeviceOccupiedException
     del DeviceOccupiedException
 
+if 'DeviceReacquiredException' not in _M_device_repo_ice.__dict__:
+    _M_device_repo_ice.DeviceReacquiredException = Ice.createTempClass()
+    class DeviceReacquiredException(Ice.UserException):
+        def __init__(self):
+            pass
+
+        def __str__(self):
+            return IcePy.stringifyException(self)
+
+        __repr__ = __str__
+
+        _ice_id = '::device_repo_ice::DeviceReacquiredException'
+
+    _M_device_repo_ice._t_DeviceReacquiredException = IcePy.defineException('::device_repo_ice::DeviceReacquiredException', DeviceReacquiredException, (), False, None, ())
+    DeviceReacquiredException._ice_type = _M_device_repo_ice._t_DeviceReacquiredException
+
+    _M_device_repo_ice.DeviceReacquiredException = DeviceReacquiredException
+    del DeviceReacquiredException
+
 if 'UnknownDeviceException' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice.UnknownDeviceException = Ice.createTempClass()
     class UnknownDeviceException(Ice.UserException):
@@ -546,7 +565,7 @@ if 'DeviceRepoPrx' not in _M_device_repo_ice.__dict__:
     DeviceRepo._op_list_devices = IcePy.Operation('list_devices', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DeviceEntries, False, 0), ())
     DeviceRepo._op_check_device_status = IcePy.Operation('check_device_status', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), ((), _M_device_repo_ice._t_DeviceStatus, False, 0), (_M_device_repo_ice._t_UnknownDeviceException,))
     DeviceRepo._op_get_device_type = IcePy.Operation('get_device_type', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), ((), _M_device_repo_ice._t_DeviceType, False, 0), (_M_device_repo_ice._t_UnknownDeviceException,))
-    DeviceRepo._op_acquire_device = IcePy.Operation('acquire_device', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), ((), IcePy._t_ObjectPrx, False, 0), (_M_device_repo_ice._t_DeviceOccupiedException, _M_device_repo_ice._t_UnknownDeviceException))
+    DeviceRepo._op_acquire_device = IcePy.Operation('acquire_device', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), ((), IcePy._t_ObjectPrx, False, 0), (_M_device_repo_ice._t_DeviceOccupiedException, _M_device_repo_ice._t_UnknownDeviceException, _M_device_repo_ice._t_DeviceReacquiredException))
     DeviceRepo._op_release_device = IcePy.Operation('release_device', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), None, (_M_device_repo_ice._t_DeviceOccupiedException, _M_device_repo_ice._t_UnknownDeviceException))
     DeviceRepo._op_list_acquired_devices = IcePy.Operation('list_acquired_devices', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_device_repo_ice._t_DeviceEntries, False, 0), ())
     DeviceRepo._op_add_device = IcePy.Operation('add_device', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0), ((), _M_device_repo_ice._t_DeviceType, False, 0), ((), _M_device_repo_ice._t_DeviceRackPrx, False, 0), ((), IcePy._t_string, False, 0)), (), ((), IcePy._t_bool, False, 0), ())

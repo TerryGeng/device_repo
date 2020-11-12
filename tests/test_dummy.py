@@ -94,6 +94,26 @@ class TestDummy:
         rack.ic.shutdown()
         host.ic.shutdown()
 
+    def test_device_reacquire(self):
+        host = self.start_host()
+        access = self.get_access()
+        rack = self.start_dummy_rack()
+
+        dev = access.get_device("Dummy01")
+        assert dev.get_data() == b'Dummy data 1'
+
+        rack.ic.shutdown()
+        time.sleep(0.2)
+        with pytest.raises(Ice.ConnectionRefusedException):
+            dev.get_data()
+
+        rack = self.start_dummy_rack()
+        dev = access.get_device("Dummy01")
+        assert dev.get_data() == b'Dummy data 1'
+
+        rack.ic.shutdown()
+        host.ic.shutdown()
+
     def test_device_conflict(self):
         import device_repo
         from device_repo import DeviceStatus

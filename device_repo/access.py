@@ -1,7 +1,7 @@
 import Ice
 
 from device_repo import (DeviceType, DeviceRepo, DeviceStatus, DummyDevice,
-                         AWG, PSG, VNA, Digitizer, DG)
+                         AWG, PSG, VNA, Digitizer, DG, DeviceReacquiredException)
 
 DEVICE_MAP = {
     DeviceType.Dummy: DummyDevice,
@@ -47,12 +47,15 @@ class DeviceRepoAccess:
                 for dev in self.list_device()]
 
     def get_device(self, device_id):
-        if device_id not in self.id_prx_map:
-            _type = self.host.get_device_type(device_id)
+        _type = self.host.get_device_type(device_id)
+        try:
             prx = DEVICE_MAP[_type].uncheckedCast(self.host.acquire_device(device_id))
             self.id_prx_map[device_id] = prx
+        except DeviceReacquiredException:
+            assert device_id in self.id_prx_map, "Sanity check failed. This is a bug."
+            prx = self.id_prx_map[device_id]
 
-        return self.id_prx_map[device_id]
+        return prx
 
     def get_device_status(self, device_id):
         return self.host.check_device_status(device_id)
@@ -79,6 +82,7 @@ class DeviceRepoAccess:
     def release_all(self):
         for _id, _, _ in self.list_acquired_devices():
             self.host.release_device(_id)
+        self.id_prx_map = {}
 
     def __del__(self):
         self.ic.destroy()
