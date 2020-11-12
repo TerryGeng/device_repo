@@ -25,6 +25,7 @@ def get_device_module():
 
     def get_dg645_module():
         from . import dg645_rack
+        return dg645_rack
 
     device_module_getter = {
         "dummy": get_dummy_module,

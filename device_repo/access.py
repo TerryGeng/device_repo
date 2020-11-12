@@ -1,14 +1,15 @@
 import Ice
 
-from device_repo import (DeviceType, DeviceRepo, DeviceStatus,
-                         DummyDevice, AWG, PSG, VNA, Digitizer)
+from device_repo import (DeviceType, DeviceRepo, DeviceStatus, DummyDevice,
+                         AWG, PSG, VNA, Digitizer, DG)
 
 DEVICE_MAP = {
     DeviceType.Dummy: DummyDevice,
     DeviceType.ArbitraryWaveformGenerator: AWG,
     DeviceType.ParametricSignalGenerator: PSG,
     DeviceType.VectorNetworkAnalyzer: VNA,
-    DeviceType.Digitizer: Digitizer
+    DeviceType.Digitizer: Digitizer,
+    DeviceType.DelayGenerator: DG
 }
 
 
