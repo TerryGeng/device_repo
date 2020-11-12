@@ -12,6 +12,7 @@ from . import device_type_ice
 from . import VNA_ice
 from . import device_repo_ice
 from . import Digitizer_ice
+from . import DG_ice
 from . import visa_device_ice
 from . import DCSource_ice
 

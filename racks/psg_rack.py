@@ -8,7 +8,7 @@ else:
     from .driver.visa_device import VisaDeviceBase, get_device_by_address
 
 
-class PSG_SRS(PSGTemplate, VisaDeviceBase):
+class PSG(PSGTemplate, VisaDeviceBase):
     def __init__(self, id, dev):
         super().__init__(dev)
         self.id = id
@@ -70,7 +70,7 @@ def load_dev(rack, args=None, logger=None):
         if logger:
             logger.info(f"Initializing {identifier} at {addr}...")
 
-        psg = PSG_SRS(identifier, dev)
+        psg = PSG(identifier, dev)
         rack.load_device(identifier, psg)
 
 

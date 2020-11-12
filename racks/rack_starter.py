@@ -1,5 +1,5 @@
 from device_repo import DeviceRack
-from device_repo.utils import get_logger
+from device_repo.utils import get_logger, InvalidParameterException
 
 from . import get_device_module
 
@@ -48,7 +48,7 @@ def start_rack_with_config(start_immediately=True):
             try:
                 argv.pop(0)
                 args = parser.parse_args(argv)
-            except SystemExit:
+            except (SystemExit, InvalidParameterException):
                 print(f"Error: Invalid initialization instruction for {argv[0]}.")
                 parser.print_help()
                 exit(1)

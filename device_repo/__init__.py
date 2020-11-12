@@ -1,6 +1,7 @@
 from .device_repo_ice import device_repo_ice as device_repo_ice_
 from .device_repo_ice import (device_type_ice, AWG_ice, Dummy_ice, PSG_ice,
-                              DCSource_ice, visa_device_ice, VNA_ice, Digitizer_ice)
+                              DCSource_ice, visa_device_ice, VNA_ice, Digitizer_ice,
+                              DG_ice)
 
 DeviceType = device_type_ice.DeviceType if hasattr(device_type_ice, "DeviceType") else device_type_ice._M_device_repo_ice.DeviceType
 DataType = device_type_ice.DataType if hasattr(device_type_ice, "DataType") else device_type_ice._M_device_repo_ice.DataType
@@ -40,6 +41,9 @@ VNA = VNAWrapper
 from .wrapper.digitizer_wrapper import DigitizerWrapper
 DigitizerTemplate = Digitizer_ice.Digitizer if hasattr(Digitizer_ice, "Digitizer") else Digitizer_ice._M_device_repo_ice.Digitizer
 Digitizer = DigitizerWrapper
+
+DGTemplate = DG_ice.DG if hasattr(DG_ice, "DG") else DG_ice._M_device_repo_ice.DG
+DG = DG_ice.DGPrx if hasattr(DG_ice, "DGPrx") else DG_ice._M_device_repo_ice.DGPrx
 
 from .access import DeviceRepoAccess
 from .rack import DeviceRackI as DeviceRack
