@@ -130,7 +130,7 @@ if 'DGPrx' not in _M_device_repo_ice.__dict__:
     DG._op_set_cycle_frequency = IcePy.Operation('set_cycle_frequency', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_double, False, 0),), (), None, ())
     DG._op_get_cycle_frequency = IcePy.Operation('get_cycle_frequency', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
     DG._op_set_channel_delay = IcePy.Operation('set_channel_delay', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_int, False, 0), ((), IcePy._t_double, False, 0), ((), IcePy._t_double, False, 0)), (), None, ())
-    DG._op_get_channel_delay = IcePy.Operation('get_channel_delay', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_int, False, 0),), (), ((), _M_device_repo_ice._t_ints, False, 0), ())
+    DG._op_get_channel_delay = IcePy.Operation('get_channel_delay', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_int, False, 0),), (), ((), _M_device_repo_ice._t_doubles, False, 0), ())
 
     _M_device_repo_ice.DG = DG
     del DG
