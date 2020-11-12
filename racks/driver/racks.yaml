@@ -1,0 +1,8 @@
+installed_racks:
+  dummy: dummy_rack
+  alazar: alazar_rack
+  psg: psg_rack
+  keysightsd1: keysight_sd1_rack
+  dc_srs: ds_srs_rack
+  vna: vna_rack
+  dg645: dg645_rack
