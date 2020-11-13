@@ -33,7 +33,9 @@ def list_all_racks():
 
 def get_module(full_package_name, module_info):
     if full_package_name not in sys.modules:
-        module = module_info.find_module(module_info.name).load_module(full_package_name)
+        module = module_info.module_finder.find_module(
+            module_info.name).load_module(module_info.name)
+        sys.modules[full_package_name] = module
     else:
         module = sys.modules[full_package_name]
 

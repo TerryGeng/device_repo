@@ -26,7 +26,7 @@ all: clean $(SLICE2PY)
 clean:
 	rm -rf device_repo/device_repo_ice/
 
-test: $(PYTHON)
+test:
 	$(PYTEST) -x -v --show-capture=log tests/test_dummy.py tests/test_dataset.py
 
 build:
