@@ -10,9 +10,14 @@ import time
 import numpy as np
 import re
 
-from racks.driver.alazar.api import *
-from racks.driver.alazar.constants import *
-from racks.driver.alazar.error_code import *
+if __name__ == "__main__":
+    from driver.alazar.api import *
+    from driver.alazar.constants import *
+    from driver.alazar.error_code import *
+else:
+    from racks.driver.alazar.api import *
+    from racks.driver.alazar.constants import *
+    from racks.driver.alazar.error_code import *
 
 
 # The rack program of Alazar's AWG series.

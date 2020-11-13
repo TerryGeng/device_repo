@@ -5,7 +5,7 @@ from device_repo.utils import (get_logger, get_rack_argv_parser, log_invoke_evt,
 if __name__ == "__main__":
     from driver.visa_device import VisaDeviceBase, get_device_by_address
 else:
-    from .driver.visa_device import VisaDeviceBase, get_device_by_address
+    from racks.driver.visa_device import VisaDeviceBase, get_device_by_address
 
 
 class PSG(PSGTemplate, VisaDeviceBase):

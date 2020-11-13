@@ -4,7 +4,7 @@ from device_repo.utils import (get_logger, get_rack_argv_parser, log_invoke_evt,
 import numpy as np
 
 if __name__ != "__main__":
-    from .driver.keysight_sd1 import (SD_AOU, SD_Waveshapes, SD_TriggerExternalSources,
+    from racks.driver.keysight_sd1 import (SD_AOU, SD_Waveshapes, SD_TriggerExternalSources,
                                       SD_TriggerBehaviors, SD_Wave, SD_WaveformTypes, SD_TriggerModes)
 else:
     from driver.keysight_sd1 import (SD_AOU, SD_Waveshapes, SD_TriggerExternalSources,

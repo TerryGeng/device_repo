@@ -1,6 +1,10 @@
 from device_repo import DCSourceTemplate, DeviceRack, DeviceType
 from device_repo.utils import get_logger, get_rack_argv_parser, log_invoke_evt
-from .driver.visa_device import VisaDeviceBase, get_device_by_address
+
+if __name__ == "__main__":
+    from driver.visa_device import VisaDeviceBase, get_device_by_address
+else:
+    from racks.driver.visa_device import VisaDeviceBase, get_device_by_address
 
 import pyvisa
 
