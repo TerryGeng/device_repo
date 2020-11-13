@@ -1,9 +1,10 @@
 from setuptools import setup, find_packages
 
+
 setup(
     name="device_repo",
     version="0.1",
-    packages=find_packages(),
+    packages=find_packages(include=['device_repo', 'device_repo.*']),
 
     author="Yanda Geng",
     author_email="gengyanda16@smail.nju.edu.cn",
