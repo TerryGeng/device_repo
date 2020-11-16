@@ -21,7 +21,7 @@ endif
 all: clean $(SLICE2PY)
 	(cd device_repo && ../$(SLICE2PY) --underscore -Islices/ $(shell (cd device_repo && find slices -name "*.ice")))
 	(cd device_repo && find device_repo_ice/ -name "*.py" -exec $(SED) -e 's/import device_repo_ice\.\(.*\)/from . import \1/g' -e "s/'device_repo_ice'/'device_repo.device_repo_ice'/g" {} \;)
-	$(PYTHON) device_repo/setup.py develop
+	$(PYTHON) -m pip install -e .
 
 clean:
 	rm -rf device_repo/device_repo_ice/

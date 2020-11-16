@@ -38,8 +38,7 @@ class Keysight_M3202A(AWGTemplate):
         return DeviceType.ArbitraryWaveformGenerator
 
     @log_invoke_evt
-    def write_raw_waveform(self, amplitude, raw_waveform,
-                           current=None):
+    def write_raw_waveform(self, raw_waveform, amplitude, current=None):
         """ICE method"""
         sd_wave = SD_Wave()
 
@@ -53,7 +52,7 @@ class Keysight_M3202A(AWGTemplate):
         self.dev.AWGqueueWaveform(self.channel,
                                   waveformNumber=self.channel,
                                   triggerMode=SD_TriggerModes.EXTTRIG,
-                                  startDelay=0,
+                                  startDelay=delay,
                                   cycles=1,
                                   prescaler=0)
 

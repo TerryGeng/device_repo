@@ -33,14 +33,14 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice.AWGPrx = Ice.createTempClass()
     class AWGPrx(_M_device_repo_ice.DevicePrx):
 
-        def write_raw_waveform(self, amplitude, waveform, context=None):
-            return _M_device_repo_ice.AWG._op_write_raw_waveform.invoke(self, ((amplitude, waveform), context))
+        def write_raw_waveform(self, waveform, amplitude, context=None):
+            return _M_device_repo_ice.AWG._op_write_raw_waveform.invoke(self, ((waveform, amplitude), context))
 
-        def write_raw_waveformAsync(self, amplitude, waveform, context=None):
-            return _M_device_repo_ice.AWG._op_write_raw_waveform.invokeAsync(self, ((amplitude, waveform), context))
+        def write_raw_waveformAsync(self, waveform, amplitude, context=None):
+            return _M_device_repo_ice.AWG._op_write_raw_waveform.invokeAsync(self, ((waveform, amplitude), context))
 
-        def begin_write_raw_waveform(self, amplitude, waveform, _response=None, _ex=None, _sent=None, context=None):
-            return _M_device_repo_ice.AWG._op_write_raw_waveform.begin(self, ((amplitude, waveform), _response, _ex, _sent, context))
+        def begin_write_raw_waveform(self, waveform, amplitude, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.AWG._op_write_raw_waveform.begin(self, ((waveform, amplitude), _response, _ex, _sent, context))
 
         def end_write_raw_waveform(self, _r):
             return _M_device_repo_ice.AWG._op_write_raw_waveform.end(self, _r)
@@ -122,7 +122,7 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
         def ice_staticId():
             return '::device_repo_ice::AWG'
 
-        def write_raw_waveform(self, amplitude, waveform, current=None):
+        def write_raw_waveform(self, waveform, amplitude, current=None):
             raise NotImplementedError("servant method 'write_raw_waveform' not implemented")
 
         def set_offset(self, amplitude, offset_voltage, current=None):
@@ -145,7 +145,7 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice._t_AWGDisp = IcePy.defineClass('::device_repo_ice::AWG', AWG, (), None, (_M_device_repo_ice._t_DeviceDisp,))
     AWG._ice_type = _M_device_repo_ice._t_AWGDisp
 
-    AWG._op_write_raw_waveform = IcePy.Operation('write_raw_waveform', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_double, False, 0), ((), _M_device_repo_ice._t_RawWaveform, False, 0)), (), None, ())
+    AWG._op_write_raw_waveform = IcePy.Operation('write_raw_waveform', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_device_repo_ice._t_RawWaveform, False, 0), ((), IcePy._t_double, False, 0)), (), None, ())
     AWG._op_set_offset = IcePy.Operation('set_offset', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_double, False, 0), ((), IcePy._t_double, False, 0)), (), None, ())
     AWG._op_set_amplitude = IcePy.Operation('set_amplitude', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_double, False, 0),), (), None, ())
     AWG._op_stop = IcePy.Operation('stop', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())

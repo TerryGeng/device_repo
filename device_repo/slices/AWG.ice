@@ -7,7 +7,7 @@ module device_repo_ice {
 
     interface AWG extends Device {
         // Arbitrary Waveform Generator
-        void write_raw_waveform(double amplitude, RawWaveform waveform);
+        void write_raw_waveform(RawWaveform waveform, double amplitude);
         void set_offset(double amplitude, double offset_voltage);
         void set_amplitude(double amp_in_volts);
         void stop();
