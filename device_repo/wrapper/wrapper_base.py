@@ -12,11 +12,10 @@ class WrapperBase:
     def __init__(self, base):
         self.base = base
 
-    def __getattr__(self, attr):
-        if attr not in self.__dict__:
-            return getattr(self.base, attr)
-        else:
-            return self.__dict__[attr]
+        my_attr = dir(self)
+        for attr in dir(base):
+            if not attr.startswith("__") and attr not in my_attr:
+                self.__setattr__(attr, getattr(base, attr))
 
     @classmethod
     def checkedCast(cls, proxy, facetOrContext=None, context=None):
