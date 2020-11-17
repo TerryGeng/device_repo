@@ -33,6 +33,18 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice.AWGPrx = Ice.createTempClass()
     class AWGPrx(_M_device_repo_ice.DevicePrx):
 
+        def get_sample_rate(self, context=None):
+            return _M_device_repo_ice.AWG._op_get_sample_rate.invoke(self, ((), context))
+
+        def get_sample_rateAsync(self, context=None):
+            return _M_device_repo_ice.AWG._op_get_sample_rate.invokeAsync(self, ((), context))
+
+        def begin_get_sample_rate(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.AWG._op_get_sample_rate.begin(self, ((), _response, _ex, _sent, context))
+
+        def end_get_sample_rate(self, _r):
+            return _M_device_repo_ice.AWG._op_get_sample_rate.end(self, _r)
+
         def write_raw_waveform(self, waveform, amplitude, context=None):
             return _M_device_repo_ice.AWG._op_write_raw_waveform.invoke(self, ((waveform, amplitude), context))
 
@@ -122,6 +134,9 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
         def ice_staticId():
             return '::device_repo_ice::AWG'
 
+        def get_sample_rate(self, current=None):
+            raise NotImplementedError("servant method 'get_sample_rate' not implemented")
+
         def write_raw_waveform(self, waveform, amplitude, current=None):
             raise NotImplementedError("servant method 'write_raw_waveform' not implemented")
 
@@ -145,6 +160,7 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
     _M_device_repo_ice._t_AWGDisp = IcePy.defineClass('::device_repo_ice::AWG', AWG, (), None, (_M_device_repo_ice._t_DeviceDisp,))
     AWG._ice_type = _M_device_repo_ice._t_AWGDisp
 
+    AWG._op_get_sample_rate = IcePy.Operation('get_sample_rate', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
     AWG._op_write_raw_waveform = IcePy.Operation('write_raw_waveform', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_device_repo_ice._t_RawWaveform, False, 0), ((), IcePy._t_double, False, 0)), (), None, ())
     AWG._op_set_offset = IcePy.Operation('set_offset', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_double, False, 0), ((), IcePy._t_double, False, 0)), (), None, ())
     AWG._op_set_amplitude = IcePy.Operation('set_amplitude', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_double, False, 0),), (), None, ())

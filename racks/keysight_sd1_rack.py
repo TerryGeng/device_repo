@@ -12,10 +12,10 @@ else:
 
 
 class Keysight_M3202A(AWGTemplate):
-    def __init__(self, chassis, slot, channel, sample_rate=1e9):
+    def __init__(self, chassis, slot, channel):
 
         self.name = f"AWG M3202A Chassis{chassis} Slot{slot} Channel{channel}"
-        self.sample_rate = sample_rate
+        self.sample_rate = 1e9
         self.dev = SD_AOU()
         self.chassis = chassis
         self.slot = slot
@@ -38,6 +38,10 @@ class Keysight_M3202A(AWGTemplate):
         return DeviceType.ArbitraryWaveformGenerator
 
     @log_invoke_evt
+    def get_sample_rate(self):
+        return self.sample_rate
+
+    @log_invoke_evt
     def write_raw_waveform(self, raw_waveform, amplitude, current=None):
         """ICE method"""
         sd_wave = SD_Wave()
@@ -52,7 +56,7 @@ class Keysight_M3202A(AWGTemplate):
         self.dev.AWGqueueWaveform(self.channel,
                                   waveformNumber=self.channel,
                                   triggerMode=SD_TriggerModes.EXTTRIG,
-                                  startDelay=delay,
+                                  startDelay=0,
                                   cycles=1,
                                   prescaler=0)
 
