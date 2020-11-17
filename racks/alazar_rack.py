@@ -170,17 +170,13 @@ class Alazar(DigitizerTemplate):
     @log_invoke_evt
     def acquire_and_fetch(self, current=None):
         self.start_acquire()
-        return self.fetch_data()
+        return self.fetch()
 
     @log_invoke_evt
     def acquire_and_fetch_average(self, current=None):
         self.start_acquire()
-        a_data, b_data = self._fetch_data()
-        a_data_avg = a_data.mean(axis=0)
-        b_data_avg = b_data.mean(axis=0)
-
-        datasets = [pack_data_set(a_data_avg), pack_data_set(b_data_avg)]
-        return datasets
+        self.start_acquire()
+        return self.fetch_average()
 
     @log_invoke_evt
     def start_acquire(self, current=None):
@@ -240,10 +236,19 @@ class Alazar(DigitizerTemplate):
         return a_data, b_data
 
     @log_invoke_evt
-    def fetch_data(self, current=None):
+    def fetch(self, current=None):
         a_data, b_data = self._fetch_data()
 
         datasets = [pack_data_set(a_data), pack_data_set(b_data)]
+        return datasets
+
+    @log_invoke_evt
+    def fetch_average(self, current=None):
+        a_data, b_data = self._fetch_data()
+        a_data_avg = a_data.mean(axis=0)
+        b_data_avg = b_data.mean(axis=0)
+
+        datasets = [pack_data_set(a_data_avg), pack_data_set(b_data_avg)]
         return datasets
 
     @staticmethod
