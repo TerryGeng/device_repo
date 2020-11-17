@@ -69,6 +69,18 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
         def end_set_offset(self, _r):
             return _M_device_repo_ice.AWG._op_set_offset.end(self, _r)
 
+        def get_offset(self, context=None):
+            return _M_device_repo_ice.AWG._op_get_offset.invoke(self, ((), context))
+
+        def get_offsetAsync(self, context=None):
+            return _M_device_repo_ice.AWG._op_get_offset.invokeAsync(self, ((), context))
+
+        def begin_get_offset(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.AWG._op_get_offset.begin(self, ((), _response, _ex, _sent, context))
+
+        def end_get_offset(self, _r):
+            return _M_device_repo_ice.AWG._op_get_offset.end(self, _r)
+
         def set_amplitude(self, amp_in_volts, context=None):
             return _M_device_repo_ice.AWG._op_set_amplitude.invoke(self, ((amp_in_volts, ), context))
 
@@ -80,6 +92,18 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
 
         def end_set_amplitude(self, _r):
             return _M_device_repo_ice.AWG._op_set_amplitude.end(self, _r)
+
+        def get_amplitude(self, context=None):
+            return _M_device_repo_ice.AWG._op_get_amplitude.invoke(self, ((), context))
+
+        def get_amplitudeAsync(self, context=None):
+            return _M_device_repo_ice.AWG._op_get_amplitude.invokeAsync(self, ((), context))
+
+        def begin_get_amplitude(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.AWG._op_get_amplitude.begin(self, ((), _response, _ex, _sent, context))
+
+        def end_get_amplitude(self, _r):
+            return _M_device_repo_ice.AWG._op_get_amplitude.end(self, _r)
 
         def stop(self, context=None):
             return _M_device_repo_ice.AWG._op_stop.invoke(self, ((), context))
@@ -143,8 +167,14 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
         def set_offset(self, amplitude, offset_voltage, current=None):
             raise NotImplementedError("servant method 'set_offset' not implemented")
 
+        def get_offset(self, current=None):
+            raise NotImplementedError("servant method 'get_offset' not implemented")
+
         def set_amplitude(self, amp_in_volts, current=None):
             raise NotImplementedError("servant method 'set_amplitude' not implemented")
+
+        def get_amplitude(self, current=None):
+            raise NotImplementedError("servant method 'get_amplitude' not implemented")
 
         def stop(self, current=None):
             raise NotImplementedError("servant method 'stop' not implemented")
@@ -163,7 +193,9 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
     AWG._op_get_sample_rate = IcePy.Operation('get_sample_rate', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
     AWG._op_write_raw_waveform = IcePy.Operation('write_raw_waveform', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_device_repo_ice._t_RawWaveform, False, 0), ((), IcePy._t_double, False, 0)), (), None, ())
     AWG._op_set_offset = IcePy.Operation('set_offset', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_double, False, 0), ((), IcePy._t_double, False, 0)), (), None, ())
+    AWG._op_get_offset = IcePy.Operation('get_offset', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
     AWG._op_set_amplitude = IcePy.Operation('set_amplitude', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_double, False, 0),), (), None, ())
+    AWG._op_get_amplitude = IcePy.Operation('get_amplitude', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
     AWG._op_stop = IcePy.Operation('stop', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
     AWG._op_run = IcePy.Operation('run', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
 

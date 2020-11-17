@@ -20,13 +20,13 @@ class Keysight_M3202A(AWGTemplate):
         self.chassis = chassis
         self.slot = slot
         self.channel = channel
+        self.offset = 0.0
+        self.amplitude = 1.0
 
         self.dev.openWithSlot("M3202A", chassis, slot)
-        self.dev.waveformFlush()
-        # make all channels work in AWG mode
         self.dev.channelWaveShape(channel, SD_Waveshapes.AOU_AWG)
-        self.dev.channelAmplitude(channel, 1.0)
-        self.dev.channelOffset(channel, 0.0)
+        self.dev.channelAmplitude(channel, self.amplitude)
+        self.dev.channelOffset(channel, self.offset)
 
         self.dev.AWGtriggerExternalConfig(channel,
                                           SD_TriggerExternalSources.
@@ -63,7 +63,13 @@ class Keysight_M3202A(AWGTemplate):
     @log_invoke_evt
     def set_offset(self, offset_voltage, current=None):
         """ICE method"""
+        self.offset = offset_voltage
         self.dev.channelOffset(self.channel, offset_voltage)
+
+    @log_invoke_evt
+    def get_offset(self, current=None):
+        """ICE method"""
+        return self.offset
 
     @log_invoke_evt
     def run(self, current=None):
@@ -79,7 +85,13 @@ class Keysight_M3202A(AWGTemplate):
     @log_invoke_evt
     def set_amplitude(self, amp, current=None):
         """ICE method"""
+        self.amplitude = amp
         self.dev.channelAmplitude(self.channel, amp)
+
+    @log_invoke_evt
+    def get_amplitude(self, current=None):
+        """ICE method"""
+        return self.amplitude
 
 
 def get_parser():
