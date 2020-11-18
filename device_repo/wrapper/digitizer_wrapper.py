@@ -19,3 +19,11 @@ class DigitizerWrapper(WrapperBase):
         dst = self.base.fetch_data()
         return unpack_data_set(dst)
 
+    def acquire_and_fetch_average(self):
+        dst = self.base.acquire_and_fetch_average()
+        return unpack_data_set(dst)
+
+    def fetch_average(self):
+        dst = self.base.fetch_average()
+        return unpack_data_set(dst)
+

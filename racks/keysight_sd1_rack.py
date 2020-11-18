@@ -52,7 +52,8 @@ class Keysight_M3202A(AWGTemplate):
 
         sd_wave.newFromArrayDouble(SD_WaveformTypes.WAVE_ANALOG, wave_data)
         self.dev.waveformLoad(sd_wave, waveformNumber=self.channel)
-        self.dev.channelAmplitude(self.channel, amplitude)
+        if amplitude > 0:
+            self.dev.channelAmplitude(self.channel, amplitude)
         self.dev.AWGqueueWaveform(self.channel,
                                   waveformNumber=self.channel,
                                   triggerMode=SD_TriggerModes.EXTTRIG,
