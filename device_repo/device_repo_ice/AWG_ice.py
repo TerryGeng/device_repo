@@ -57,14 +57,14 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
         def end_write_raw_waveform(self, _r):
             return _M_device_repo_ice.AWG._op_write_raw_waveform.end(self, _r)
 
-        def set_offset(self, amplitude, offset_voltage, context=None):
-            return _M_device_repo_ice.AWG._op_set_offset.invoke(self, ((amplitude, offset_voltage), context))
+        def set_offset(self, offset_voltage, context=None):
+            return _M_device_repo_ice.AWG._op_set_offset.invoke(self, ((offset_voltage, ), context))
 
-        def set_offsetAsync(self, amplitude, offset_voltage, context=None):
-            return _M_device_repo_ice.AWG._op_set_offset.invokeAsync(self, ((amplitude, offset_voltage), context))
+        def set_offsetAsync(self, offset_voltage, context=None):
+            return _M_device_repo_ice.AWG._op_set_offset.invokeAsync(self, ((offset_voltage, ), context))
 
-        def begin_set_offset(self, amplitude, offset_voltage, _response=None, _ex=None, _sent=None, context=None):
-            return _M_device_repo_ice.AWG._op_set_offset.begin(self, ((amplitude, offset_voltage), _response, _ex, _sent, context))
+        def begin_set_offset(self, offset_voltage, _response=None, _ex=None, _sent=None, context=None):
+            return _M_device_repo_ice.AWG._op_set_offset.begin(self, ((offset_voltage, ), _response, _ex, _sent, context))
 
         def end_set_offset(self, _r):
             return _M_device_repo_ice.AWG._op_set_offset.end(self, _r)
@@ -164,7 +164,7 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
         def write_raw_waveform(self, waveform, amplitude, current=None):
             raise NotImplementedError("servant method 'write_raw_waveform' not implemented")
 
-        def set_offset(self, amplitude, offset_voltage, current=None):
+        def set_offset(self, offset_voltage, current=None):
             raise NotImplementedError("servant method 'set_offset' not implemented")
 
         def get_offset(self, current=None):
@@ -192,7 +192,7 @@ if 'AWGPrx' not in _M_device_repo_ice.__dict__:
 
     AWG._op_get_sample_rate = IcePy.Operation('get_sample_rate', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
     AWG._op_write_raw_waveform = IcePy.Operation('write_raw_waveform', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_device_repo_ice._t_RawWaveform, False, 0), ((), IcePy._t_double, False, 0)), (), None, ())
-    AWG._op_set_offset = IcePy.Operation('set_offset', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_double, False, 0), ((), IcePy._t_double, False, 0)), (), None, ())
+    AWG._op_set_offset = IcePy.Operation('set_offset', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_double, False, 0),), (), None, ())
     AWG._op_get_offset = IcePy.Operation('get_offset', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
     AWG._op_set_amplitude = IcePy.Operation('set_amplitude', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_double, False, 0),), (), None, ())
     AWG._op_get_amplitude = IcePy.Operation('get_amplitude', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
