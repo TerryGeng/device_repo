@@ -38,7 +38,7 @@ class Keysight_M3202A(AWGTemplate):
         return DeviceType.ArbitraryWaveformGenerator
 
     @log_invoke_evt
-    def get_sample_rate(self):
+    def get_sample_rate(self, current=None):
         return self.sample_rate
 
     @log_invoke_evt
