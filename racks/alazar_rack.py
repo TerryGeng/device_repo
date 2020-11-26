@@ -47,8 +47,8 @@ class Alazar(DigitizerTemplate):
                  repeats=512,
                  channel_ranges=(0, 0),
                  trigger_level=1.0,
-                 trigger_delay=0,
-                 trigger_timeout=0,
+                 trigger_delay=0.0,
+                 trigger_timeout=0.0,
                  records_per_buffer=128,
                  read_timeout=1):
         super().__init__()
@@ -133,14 +133,14 @@ class Alazar(DigitizerTemplate):
         self.trigger_delay = delay
         delay *= self.sample_rate  # timeout in unit of sample clocke
 
-        assert AlazarSetTriggerDelay(self.handle, delay) == ApiSuccess
+        assert AlazarSetTriggerDelay(self.handle, int(delay)) == ApiSuccess
 
     @log_invoke_evt
     def set_trigger_timeout(self, timeout, current=None):
         self.trigger_timeout = timeout
         timeout *= self.sample_rate  # timeout in unit of sample clock
 
-        assert AlazarSetTriggerTimeOut(self.handle, timeout) == ApiSuccess
+        assert AlazarSetTriggerTimeOut(self.handle, int(timeout)) == ApiSuccess
 
     def get_sample_rate(self, current=None):
         return self.sample_rate
