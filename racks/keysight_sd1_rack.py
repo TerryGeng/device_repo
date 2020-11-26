@@ -121,8 +121,12 @@ def load_dev(rack, args=None, logger=None):
     awgs = []
     for location in args.location:
         splited = location.split(":")
-        if len(splited) != 2 or not isinstance(splited[0], int) or \
-                not isinstance(splited[1], int):
+        try:
+            chasis, slot = int(splited[0]), int(splited[1])
+        except ValueError:
+            raise InvalidParameterException
+
+        if len(splited) != 2:
             raise InvalidParameterException
         awgs.append((int(splited[0]), int(splited[1])))
 

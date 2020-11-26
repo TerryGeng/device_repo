@@ -175,7 +175,6 @@ class Alazar(DigitizerTemplate):
     @log_invoke_evt
     def acquire_and_fetch_average(self, current=None):
         self.start_acquire()
-        self.start_acquire()
         return self.fetch_average()
 
     @log_invoke_evt
@@ -205,8 +204,8 @@ class Alazar(DigitizerTemplate):
         records_per_buffer_each_channel = int(self.records_per_buffer / 2)
         num_of_buffers = int(self.repeats / records_per_buffer_each_channel)
 
-        a_data = np.zeros([self.repeats, self.samples_per_record])
-        b_data = np.zeros([self.repeats, self.samples_per_record])
+        a_data = np.zeros([self.repeats, self.samples_per_record], dtype=np.uint8)
+        b_data = np.zeros([self.repeats, self.samples_per_record], dtype=np.uint8)
 
         interleaved_record_length = self.samples_per_record * 2
         interleaved_samples_per_buffer = self.records_per_buffer * self.samples_per_record
@@ -224,11 +223,9 @@ class Alazar(DigitizerTemplate):
 
             assert ret_val == ApiSuccess or (n == num_of_buffers - 1 and ret_val == ApiTransferComplete)
 
-            buffer = np.asarray(_buffer)
-
             for i in range(records_per_buffer_each_channel):
                 buffer_offset = i * interleaved_record_length
-                record_window = buffer[buffer_offset:buffer_offset + interleaved_record_length]
+                record_window = _buffer[buffer_offset:buffer_offset + interleaved_record_length]
                 a_data[n*records_per_buffer_each_channel+i] = record_window[0::2]
                 b_data[n*records_per_buffer_each_channel+i] = record_window[1::2]
 
