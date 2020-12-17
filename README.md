@@ -47,7 +47,7 @@ devicerepo
    
 1. On the PC which devices are connected to: start the device rack.
 ```bash
-python racks/dummy_rack.py -h 127.0.0.1
+python racks/dummy_rack.py -h 127.0.0.1 Dummy01:test_data
 ```
    where 127.0.0.1 is the ip address of the host PC.
    
