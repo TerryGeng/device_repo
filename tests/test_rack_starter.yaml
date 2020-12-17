@@ -2,4 +2,4 @@ network:
   host_address: 127.0.0.1
   host_port: 20201
 devices:
-  - dummy --data0 Hello --data1 World
+  - dummy Dummy01:Hello Dummy02:World

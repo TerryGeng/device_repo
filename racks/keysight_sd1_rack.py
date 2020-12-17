@@ -98,13 +98,13 @@ class Keysight_M3202A(AWGTemplate):
 def get_parser():
     parser = get_rack_argv_parser("Start the Keysight M3202A rack.")
 
-    parser.add_argument("location", nargs="+", type=str,
-                        help="location of the M3202A, in the format of "
-                             "{chasis}:{slot} (multiple instances can be loaded)")
+    parser.add_argument("name_location", nargs="+", type=str,
+                        help="name and location of the M3202A, in the format of "
+                             "{name}@{chasis}:{slot} (multiple instances can be loaded)")
     return parser
 
 
-def load_keysight_m3202a(rack, chasis, slot, identifier="", logger=None):
+def load_keysight_m3202a(rack, chasis, slot, identifier, logger=None):
     for channel in [1, 2, 3, 4]:
         _id = ""
         if not identifier:
@@ -118,21 +118,19 @@ def load_keysight_m3202a(rack, chasis, slot, identifier="", logger=None):
 
 
 def load_dev(rack, args=None, logger=None):
+    import re
     awgs = []
     for location in args.location:
-        splited = location.split(":")
-        try:
-            chasis, slot = int(splited[0]), int(splited[1])
-        except ValueError:
+        splited = re.match("(.+)@(\d+):(\d+)", location)
+        if not splited:
             raise InvalidParameterException
 
-        if len(splited) != 2:
-            raise InvalidParameterException
-        awgs.append((int(splited[0]), int(splited[1])))
+        name, chasis, slot = int(splited[1]), int(splited[2]), int(splited[3])
+        awgs.append((name, chasis, slot))
 
     for awg in awgs:
-        chasis, slot = awg
-        load_keysight_m3202a(rack, chasis, slot, "", logger)
+        name, chasis, slot = awg
+        load_keysight_m3202a(rack, chasis, slot, name, logger)
 
 
 if __name__ == "__main__":

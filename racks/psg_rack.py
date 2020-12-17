@@ -65,13 +65,12 @@ def load_dev(rack, args=None, logger=None):
 
     for name, addr in name_address_pairs:
         dev = get_device_by_address(addr)
-        identifier = f"PSG_{name}"
 
         if logger:
-            logger.info(f"Initializing {identifier} at {addr}...")
+            logger.info(f"Initializing {name} at {addr}...")
 
-        psg = PSG(identifier, dev)
-        rack.load_device(identifier, psg)
+        psg = PSG(name, dev)
+        rack.load_device(name, psg)
 
 
 if __name__ == "__main__":

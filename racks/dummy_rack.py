@@ -1,5 +1,5 @@
 from device_repo import DeviceRack, DummyDeviceTemplate, DeviceType
-from device_repo.utils import get_logger, get_rack_argv_parser
+from device_repo.utils import get_logger, get_rack_argv_parser, InvalidParameterException
 
 
 class DummyDev(DummyDeviceTemplate):
@@ -16,12 +16,9 @@ class DummyDev(DummyDeviceTemplate):
 def get_parser():
     parser = get_rack_argv_parser("Start dummy rack for testing.")
 
-    parser.add_argument("--data0", type=str, dest="data0", default="Dummy data 1",
-                        help="data0")
-    parser.add_argument("--data1", type=str, dest="data1", default="Dummy data 2",
-                        help="data1")
-    parser.add_argument("--data2", type=str, dest="data2", default="Dummy data 3",
-                        help="data2")
+    parser.add_argument("name_data", nargs="+", type=str,
+                        help="name and dummy data of the dummy device, in the format of "
+                             "{name}:{data} (multiple instances can be loaded)")
     return parser
 
 
@@ -37,13 +34,15 @@ def start_dummy_rack(host, port, start_immediately=True, args=None):
 
 
 def load_dev(rack, args=None, logger=None):
-    dummy01 = DummyDev(args.data0.encode("utf-8") if args else b"Dummy data 1")
-    dummy02 = DummyDev(args.data1.encode("utf-8") if args else b"Dummy data 2")
-    dummy03 = DummyDev(args.data2.encode("utf-8") if args else b"Dummy data 3")
+    import re
+    for name_data in args.name_data:
+        splited = re.match("(.+):(.+)", name_data)
 
-    rack.load_device("Dummy01", dummy01)
-    rack.load_device("Dummy02", dummy02)
-    rack.load_device("Dummy03", dummy03)
+        if not splited:
+            raise InvalidParameterException
+
+        dummy = DummyDev(splited[2].encode("utf-8") if args else b"Dummy data 1")
+        rack.load_device(splited[1], dummy)
 
 
 if __name__ == "__main__":

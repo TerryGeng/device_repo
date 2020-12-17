@@ -100,35 +100,33 @@ def get_parser():
 
     parser.add_argument("model_name_address", nargs="+", type=str,
                         help="model, name and VISA address of the VNA, in the format of "
-                             "model:{name}@{address} (multiple instances can be loaded). "
+                             "{name}:{model}@{address} (multiple instances can be loaded). "
                              f"Model supported: {model_supported}."
                         )
     return parser
 
 
 def load_dev(rack, args=None, logger=None):
+    import re
     model_name_address_tuples = []
 
     for name_addr in args.model_name_address:
-        try:
-            splited = name_addr.split("@")
-            model, name = splited[0].split(":")
-            address = splited[1]
-            model_name_address_tuples.append((model, name, address))
-        except (ValueError, IndexError):
-            parser.print_help()
-            exit(1)
+        splited = re.match("(.+):(.+)@(.+)", name_addr)
+        if not splited:
+            raise InvalidParameterException
+
+        model, name, address = splited[1], splited[2], splited[3]
+        model_name_address_tuples.append((model, name, address))
 
     for model, name, addr in model_name_address_tuples:
         dev = get_device_by_address(addr)
-        identifier = f"VNA_{model}_{name}"
 
         if logger:
-            logger.info(f"Initializing {identifier} at {addr}...")
+            logger.info(f"Initializing {name} at {addr}...")
 
         if model.upper() in model_class_map:
-            vna = model_class_map[model.upper()](identifier, dev)
-            rack.load_device(identifier, vna)
+            vna = model_class_map[model.upper()](name, dev)
+            rack.load_device(name, vna)
         else:
             raise InvalidParameterException("Invalid device model!")
 

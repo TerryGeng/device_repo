@@ -26,8 +26,11 @@ class TestDummy:
         return access
 
     def start_dummy_rack(self):
-        from racks.dummy_rack import start_dummy_rack
-        rack = start_dummy_rack("127.0.0.1", 20201, False)
+        from racks.dummy_rack import start_dummy_rack, get_parser
+        parser = get_parser()
+        args = parser.parse_args(['Dummy01:Dummy_data_1', 'Dummy02:Dummy_data_2'])
+        print(args)
+        rack = start_dummy_rack("127.0.0.1", 20201, False, args)
         threading.Thread(name="DummyRack", target=rack.start).start()
         time.sleep(0.5)
         return rack
@@ -46,7 +49,7 @@ class TestDummy:
         rack = self.start_dummy_rack()
 
         dev_list = access.list_device()
-        assert len(dev_list) == 3
+        assert len(dev_list) == 2
         assert dev_list[0].id == 'Dummy01'
         assert access.get_device_status('Dummy01') == DeviceStatus.Idle
 
@@ -60,7 +63,7 @@ class TestDummy:
         rack = self.start_dummy_rack()
 
         dev_list = access.list_device()
-        assert len(dev_list) == 3
+        assert len(dev_list) == 2
 
         rack.ic.shutdown()
         time.sleep(0.2)
@@ -76,8 +79,8 @@ class TestDummy:
 
         assert dev == dev_
 
-        assert dev.get_data() == b'Dummy data 1'
-        assert dev.get_string_data() == 'Dummy data 1'
+        assert dev.get_data() == b'Dummy_data_1'
+        assert dev.get_string_data() == 'Dummy_data_1'
 
         access.release_device('Dummy01')
 
@@ -85,7 +88,7 @@ class TestDummy:
             dev.get_data()
 
         dev = access.get_device('Dummy01')
-        assert dev.get_data() == b'Dummy data 1'
+        assert dev.get_data() == b'Dummy_data_1'
         access.release_device(dev)
 
         with pytest.raises(Ice.ObjectNotExistException):
@@ -100,7 +103,7 @@ class TestDummy:
         rack = self.start_dummy_rack()
 
         dev = access.get_device("Dummy01")
-        assert dev.get_data() == b'Dummy data 1'
+        assert dev.get_data() == b'Dummy_data_1'
 
         rack.ic.shutdown()
         time.sleep(0.2)
@@ -109,7 +112,7 @@ class TestDummy:
 
         rack = self.start_dummy_rack()
         dev = access.get_device("Dummy01")
-        assert dev.get_data() == b'Dummy data 1'
+        assert dev.get_data() == b'Dummy_data_1'
 
         rack.ic.shutdown()
         host.ic.shutdown()
@@ -137,7 +140,7 @@ class TestDummy:
         assert 'Dummy01' not in host.device_user_map
 
         dev = access2.get_device('Dummy01')
-        assert dev.get_data() == b'Dummy data 1'
+        assert dev.get_data() == b'Dummy_data_1'
 
         rack.ic.shutdown()
         host.ic.shutdown()
@@ -174,7 +177,7 @@ class TestDummy:
         time.sleep(2)
 
         access = self.get_access()
-        assert len(access.list_device()) == 3
+        assert len(access.list_device()) == 2
 
         rack.ic.shutdown()
         host.ic.shutdown()
@@ -188,8 +191,8 @@ class TestDummy:
         dev1 = access.get_device('Dummy01')
         dev2 = access.get_device('Dummy02')
 
-        assert dev1.get_data() == b'Dummy data 1'
-        assert dev2.get_data() == b'Dummy data 2'
+        assert dev1.get_data() == b'Dummy_data_1'
+        assert dev2.get_data() == b'Dummy_data_2'
 
         dev_list = access.list_acquired_devices()
         ids = [dev[0] for dev in dev_list]

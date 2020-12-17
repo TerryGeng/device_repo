@@ -339,13 +339,11 @@ def load_dev(rack, args=None, logger=None):
         name_address_pairs.append((splited[0], splited[1]))
 
     for name, addr in name_address_pairs:
-        identifier = f"ATS_{name}"
-
         if logger:
-            logger.info(f"Initializing {identifier} at {addr}...")
+            logger.info(f"Initializing {name} at {addr}...")
 
         ats = Alazar(name, addr)
-        rack.load_device(identifier, ats)
+        rack.load_device(name, ats)
 
 
 if __name__ == "__main__":

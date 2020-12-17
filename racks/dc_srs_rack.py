@@ -12,7 +12,7 @@ import pyvisa
 class DCSourceChannel(DCSourceTemplate, VisaDeviceBase):
     def __init__(self, name, ch, dev):
         super().__init__(dev)
-        self.name = f"DC_SRS_{name}_Ch{ch}"
+        self.name = f"{name}_Ch{ch}"
         self.ch = ch
 
     def get_type(self, current=None):
@@ -56,11 +56,10 @@ def load_dev(rack, args, logger=None):
     dev = get_device_by_address(args.address)
 
     for ch in [1, 2, 3, 4, 5, 6, 7, 8]:
-        identifier = f"DC_SRS_{name}_CH{ch}" if args.name else f"DC_SRS_CH{ch}"
-        _id = f"{identifier}_CH{ch}"
+        _id = f"{name}_CH{ch}"
 
         srs = DCSourceChannel(_id, ch, dev)
-        rack.load_device(identifier, srs)
+        rack.load_device(name, srs)
 
 
 if __name__ == "__main__":
