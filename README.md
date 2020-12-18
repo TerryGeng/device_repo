@@ -34,10 +34,10 @@ For Windows users, type
 
 2. Install device_repo to `venv` by
 ```bash
-python device_repo/setup.py install
+pip install .
 ```
 
-## Usage
+## Basic Usage
 
 1. On the host PC: start the device repo host. (Don't forget activate `venv`)
 ```bash
@@ -61,6 +61,38 @@ print(data)
 access.release_device("Dummy01")
 ```
 
+
+## Start Racks with rack_starter
+Sometimes people would like to add all devices into a single rack, instead of
+manually starting a lot of racks. This can be done by rack_starter.
+
+First, you need to write a config file. Create a file called `starter.yaml`,
+type in
+```yaml
+network:
+  host_address: 127.0.0.1
+  host_port: 20201
+devices:
+  - dummy Dummy01:Hello
+  - dummy Dummy02:World
+```
+
+The network section specifies the address and port used by the device repo host.
+
+The devices section gives a list of device racks to be loaded, in the format
+just as the command used to start the device. Note that the name of rack to be
+started is the first argument, e.g. `dummy` in `dummy Dummy02:World`. It sould
+match the name of some `{name}_rack.py` in `racks/`, in this case,
+`dummy_rack.py`. The rest of the parameters are just those passed to the rack
+as commandline parameters.
+
+After you have created the config file, run the rack by using `start_rack.py`,
+with
+```bash
+python start_rack.py -c starter.yaml
+```
+where `starter.yaml` is the path points to your config file.
+
 ## Develop
 
 These sections are prepared for people interested in how _device repo_ works and
@@ -69,27 +101,26 @@ would to get involved in debugging, maintaining or enhancing it.
 ### Prepare development environment
 
 _device repo_ is initially developed under *nix environment. Windows users should
-consider install _Mingw_ or _Cygwin_ to get a set of tools frequently used on *nix
+consider install _Msys_ to get a set of tools frequently used on *nix
 environment.
 
 To test any changes conveniently, one should install device_repo in _development_
 mode, i.e.
 ```bash
-venv/bin/python device_repo/setup.py develop
+pip install --editable .
 ```
 
 ### Compile ICE slices into python scripts
 
 The whole device_repo is based on ZeroC ICE, a RPC framework widely used in industry.
 It provides everything one needs to do RPC. RPC interface is defined by _slice_ files
-(as in device_repo/slices/). They need to be converted into python scripts beforehand.
+(as in `device_repo/slices/`). They need to be converted into python scripts beforehand.
 
 A `Makefile` has been provided to wrap up all these nuance (you may have already
 notice some tricky substitutions happen in the Makefile). In order to get it work,
-make sure you have _Mingw_ or _Cygwin_ installed **and the `PATH` environment variable
-is properly set to include its bin/ folder**.
+make sure you have _Msys_ installed.
 
-Then on your PowerShell, type
+Then on your Msys shell, type
 ```bash
 make
 ```

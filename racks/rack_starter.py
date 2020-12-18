@@ -71,7 +71,7 @@ def start_rack_with_config(start_immediately=True):
         print("Error: No device initialization instruction discovered in the config file.")
         exit(1)
 
-    rack = DeviceRack("RackStater", host_addr, host_port, logger)
+    rack = DeviceRack("RackStarter", host_addr, host_port, logger)
 
     for dev_init_inst in dev_init_list:
         argv = list(filter(lambda x: x, dev_init_inst.split(" ")))

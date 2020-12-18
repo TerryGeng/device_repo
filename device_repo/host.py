@@ -108,6 +108,7 @@ class DeviceRepoI(DeviceRepo):
         rack = rack.ice_context({'token': token})
         try:
             assert(rack.check_status(_id) == DeviceStatus.Idle)
+            assert _id not in self.devices, "Attempt to add device with duplicated name"
         except Exception as e:
             self.logger.error("Error when adding device: ")
             self.logger.error(e)
