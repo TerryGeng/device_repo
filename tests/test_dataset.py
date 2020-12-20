@@ -2,40 +2,44 @@ import numpy as np
 
 
 class TestDataset:
-    def test_pack_unpack_bytes_1d(self):
+    def test_pack_unpack_1d(self):
         from device_repo.utils import pack_data_set, unpack_data_set
         from device_repo import DataSet, DataType
 
-        mock_set = np.array([0, 1, 2, 3, 4], dtype='byte')
-        packed = pack_data_set(mock_set)
+        for type in [np.uint8, np.uint16, np.uint32, np.uint64,
+                     np.int8, np.int16, np.int32, np.int64,
+                     np.float, np.double]:
+            mock_set = np.array([0, 1, 2, 3, 4], dtype=type)
+            packed = pack_data_set(mock_set)
 
-        assert isinstance(packed, DataSet)
-        assert packed.shape == (5,)
-        assert packed.type == DataType.Byte
+            assert isinstance(packed, DataSet)
+            assert packed.shape == (5,)
 
-        unpacked = unpack_data_set(packed)
-        assert isinstance(unpacked, np.ndarray)
-        assert all(mock_set == unpacked)
+            unpacked = unpack_data_set(packed)
+            assert isinstance(unpacked, np.ndarray)
+            assert all(mock_set == unpacked)
 
-    def test_pack_unpack_bytes_2d(self):
+    def test_pack_unpack_2d(self):
         from device_repo.utils import pack_data_set, unpack_data_set
         from device_repo import DataSet, DataType
 
-        mock_set = np.array(
-            [[0, 1, 2, 3, 4],
-             [5, 6, 7, 8, 9]], dtype='byte')
+        for type in [np.uint8, np.uint16, np.uint32, np.uint64,
+                     np.int8, np.int16, np.int32, np.int64,
+                     np.float, np.double]:
+            mock_set = np.array(
+                [[0, 1, 2, 3, 4],
+                 [5, 6, 7, 8, 9]], dtype=type)
 
-        packed = pack_data_set(mock_set)
+            packed = pack_data_set(mock_set)
 
-        assert isinstance(packed, DataSet)
-        assert packed.shape == (2, 5)
-        assert packed.type == DataType.Byte
+            assert isinstance(packed, DataSet)
+            assert packed.shape == (2, 5)
 
-        unpacked = unpack_data_set(packed)
-        assert isinstance(unpacked, np.ndarray)
-        assert all((mock_set == unpacked).flatten())
+            unpacked = unpack_data_set(packed)
+            assert isinstance(unpacked, np.ndarray)
+            assert all((mock_set == unpacked).flatten())
 
-    def test_pack_unpack_bytes_list(self):
+    def test_pack_unpack_list(self):
         from device_repo.utils import pack_data_set, unpack_data_set
         from device_repo import DataSet, DataType
 

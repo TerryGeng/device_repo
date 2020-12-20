@@ -63,11 +63,17 @@ if 'DataType' not in _M_device_repo_ice.__dict__:
 
     DataType.Bool = DataType("Bool", 0)
     DataType.Byte = DataType("Byte", 1)
-    DataType.Short = DataType("Short", 2)
-    DataType.Int = DataType("Int", 3)
-    DataType.Float = DataType("Float", 4)
-    DataType.Double = DataType("Double", 5)
-    DataType._enumerators = { 0:DataType.Bool, 1:DataType.Byte, 2:DataType.Short, 3:DataType.Int, 4:DataType.Float, 5:DataType.Double }
+    DataType.UInt8 = DataType("UInt8", 2)
+    DataType.UInt16 = DataType("UInt16", 3)
+    DataType.UInt32 = DataType("UInt32", 4)
+    DataType.UInt64 = DataType("UInt64", 5)
+    DataType.Int8 = DataType("Int8", 6)
+    DataType.Int16 = DataType("Int16", 7)
+    DataType.Int32 = DataType("Int32", 8)
+    DataType.Int64 = DataType("Int64", 9)
+    DataType.Float = DataType("Float", 10)
+    DataType.Double = DataType("Double", 11)
+    DataType._enumerators = { 0:DataType.Bool, 1:DataType.Byte, 2:DataType.UInt8, 3:DataType.UInt16, 4:DataType.UInt32, 5:DataType.UInt64, 6:DataType.Int8, 7:DataType.Int16, 8:DataType.Int32, 9:DataType.Int64, 10:DataType.Float, 11:DataType.Double }
 
     _M_device_repo_ice._t_DataType = IcePy.defineEnum('::device_repo_ice::DataType', DataType, (), DataType._enumerators)
 

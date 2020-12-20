@@ -14,8 +14,14 @@ module device_repo_ice {
     enum DataType {
         Bool,  // 1 bit
         Byte,  // 1 byte = 4 bits
-        Short,  // 2 bytes
-        Int,  // 4 bytes
+        UInt8,  // 1 bytes
+        UInt16,  // 2 bytes
+        UInt32,  // 4 bytes
+        UInt64,  // 8 bytes
+        Int8,  // 1 bytes
+        Int16,  // 2 bytes
+        Int32,  // 4 bytes
+        Int64,  // 8 bytes
         Float,   // 4 bytes
         Double  // 8 bytes
     }

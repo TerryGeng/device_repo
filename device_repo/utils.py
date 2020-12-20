@@ -63,10 +63,22 @@ def to_ice_data_type(np_type):
         return DataType.Bool
     elif np_type == np.dtype(np.byte):
         return DataType.Byte
-    elif np_type == np.dtype(np.short):
-        return DataType.Short
+    elif np_type == np.dtype(np.uint8):
+        return DataType.UInt8
+    elif np_type == np.dtype(np.uint16):
+        return DataType.UInt16
+    elif np_type == np.dtype(np.uint32):
+        return DataType.UInt32
+    elif np_type == np.dtype(np.uint64):
+        return DataType.UInt64
+    elif np_type == np.dtype(np.int8):
+        return DataType.Int8
     elif np_type == np.dtype(np.int16):
-        return DataType.Int
+        return DataType.Int16
+    elif np_type == np.dtype(np.int32):
+        return DataType.Int32
+    elif np_type == np.dtype(np.int64):
+        return DataType.Int64
     elif np_type == np.dtype(np.float):
         return DataType.Float
     elif np_type == np.dtype(np.double):
@@ -81,10 +93,22 @@ def to_numpy_data_type(ice_type):
         return np.dtype(np.bool)
     elif ice_type == DataType.Byte:
         return np.dtype(np.byte)
-    elif ice_type == DataType.Short:
-        return np.dtype(np.short)
-    elif ice_type == DataType.Int:
+    elif ice_type == DataType.UInt8:
+        return np.dtype(np.uint8)
+    elif ice_type == DataType.UInt16:
+        return np.dtype(np.uint16)
+    elif ice_type == DataType.UInt32:
+        return np.dtype(np.uint32)
+    elif ice_type == DataType.UInt64:
+        return np.dtype(np.uint64)
+    elif ice_type == DataType.Int8:
+        return np.dtype(np.int8)
+    elif ice_type == DataType.Int16:
         return np.dtype(np.int16)
+    elif ice_type == DataType.Int32:
+        return np.dtype(np.int32)
+    elif ice_type == DataType.Int64:
+        return np.dtype(np.int64)
     elif ice_type == DataType.Float:
         return np.dtype(np.float)
     elif ice_type == DataType.Double:
