@@ -120,12 +120,12 @@ def load_keysight_m3202a(rack, chasis, slot, identifier, logger=None):
 def load_dev(rack, args=None, logger=None):
     import re
     awgs = []
-    for location in args.location:
+    for location in args.name_location:
         splited = re.match("(.+)@(\d+):(\d+)", location)
         if not splited:
             raise InvalidParameterException
 
-        name, chasis, slot = int(splited[1]), int(splited[2]), int(splited[3])
+        name, chasis, slot = splited[1], int(splited[2]), int(splited[3])
         awgs.append((name, chasis, slot))
 
     for awg in awgs:
