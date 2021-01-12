@@ -19,7 +19,7 @@ class VNA_Keysight(VNATemplate, VisaDeviceBase):
 
     @log_invoke_evt
     def set_power(self, power_in_db, current=None):
-        self.visa_write(f":SOUR:POW {power_in_db:.8e}dB")
+        self.visa_write(f":SOUR:POW {power_in_db:f}dBm")
 
     @log_invoke_evt
     def get_power(self, current=None):
@@ -27,7 +27,7 @@ class VNA_Keysight(VNATemplate, VisaDeviceBase):
 
     @log_invoke_evt
     def set_frequency_center(self, freq_in_hz, current=None):
-        self.visa_write(f":SOUR:FREQ:CENT {freq_in_hz:.13e}Hz")
+        self.visa_write(f":SENS:FREQ:CENT {freq_in_hz:f}Hz")
 
     @log_invoke_evt
     def get_frequency_center(self, current=None):
@@ -35,7 +35,7 @@ class VNA_Keysight(VNATemplate, VisaDeviceBase):
 
     @log_invoke_evt
     def set_frequency_start(self, freq_in_hz, current=None):
-        self.visa_write(f":SOUR:FREQ:STAR {freq_in_hz:.13e}Hz")
+        self.visa_write(f":SENS:FREQ:STAR {freq_in_hz:f}Hz")
 
     @log_invoke_evt
     def get_frequency_start(self, current=None):
@@ -43,7 +43,7 @@ class VNA_Keysight(VNATemplate, VisaDeviceBase):
 
     @log_invoke_evt
     def set_frequency_stop(self, freq_in_hz, current=None):
-        self.visa_write(f":SOUR:FREQ:STOP {freq_in_hz:.13e}Hz")
+        self.visa_write(f":SENS:FREQ:STOP {freq_in_hz:f}Hz")
 
     @log_invoke_evt
     def get_frequency_stop(self, current=None):
