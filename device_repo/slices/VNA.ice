@@ -21,7 +21,7 @@ module device_repo_ice {
         doubles get_s(int channel);
 
         void set_num_of_points(int num_of_points);
-        void get_num_of_points();
+        double get_num_of_points();
 
         void sweep_on();
         void sweep_off();

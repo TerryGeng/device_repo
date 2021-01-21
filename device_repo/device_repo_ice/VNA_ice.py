@@ -272,7 +272,7 @@ if 'VNAPrx' not in _M_device_repo_ice.__dict__:
     VNA._op_get_frequency_stop = IcePy.Operation('get_frequency_stop', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
     VNA._op_get_s = IcePy.Operation('get_s', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_int, False, 0),), (), ((), _M_device_repo_ice._t_doubles, False, 0), ())
     VNA._op_set_num_of_points = IcePy.Operation('set_num_of_points', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_int, False, 0),), (), None, ())
-    VNA._op_get_num_of_points = IcePy.Operation('get_num_of_points', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
+    VNA._op_get_num_of_points = IcePy.Operation('get_num_of_points', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_double, False, 0), ())
     VNA._op_sweep_on = IcePy.Operation('sweep_on', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
     VNA._op_sweep_off = IcePy.Operation('sweep_off', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
 

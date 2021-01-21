@@ -63,10 +63,8 @@ def load_dev(rack, args, logger=None):
 
 
 if __name__ == "__main__":
-    import sys
-
     parser = get_parser()
-    args = parser.parse_args(sys.argv)
+    args = parser.parse_args()
     logger = get_logger()
     rack = DeviceRack("DC_SRSRack", args.host, args.port, logger)
 
