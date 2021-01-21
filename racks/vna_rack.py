@@ -67,7 +67,7 @@ class VNA_Keysight(VNATemplate, VisaDeviceBase):
 
     @log_invoke_evt
     def set_num_of_points(self, num_of_points, current=None):
-        self.visa_write(f"SOUR:SEW:POIN {num_of_points:d}")
+        self.visa_write(f"SENS:SEW:POIN {num_of_points:d}")
 
     @log_invoke_evt
     def get_num_of_points(self, current=None):
