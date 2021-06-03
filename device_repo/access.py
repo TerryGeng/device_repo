@@ -1,7 +1,8 @@
 import Ice
 
 from device_repo import (DeviceType, DeviceRepo, DeviceStatus, DummyDevice,
-                         AWG, PSG, VNA, Digitizer, DG, DeviceReacquiredException)
+                         AWG, PSG, VNA, Digitizer, DG, DCSource,
+                         DeviceReacquiredException)
 
 DEVICE_MAP = {
     DeviceType.Dummy: DummyDevice,
@@ -9,7 +10,8 @@ DEVICE_MAP = {
     DeviceType.ParametricSignalGenerator: PSG,
     DeviceType.VectorNetworkAnalyzer: VNA,
     DeviceType.Digitizer: Digitizer,
-    DeviceType.DelayGenerator: DG
+    DeviceType.DelayGenerator: DG,
+    DeviceType.DCSource: DCSource
 }
 
 
