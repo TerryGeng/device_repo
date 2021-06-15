@@ -19,24 +19,24 @@ class DCSourceChannel(DCSourceTemplate, VisaDeviceBase):
         return DeviceType.DCSource
 
     @log_invoke_evt
-    def set_offset(self, voltage_in_volts, current=None):
-        self.visa_write(f':SNDT {self.ch}, "VOLT {voltage_in_volts:.3f}"')
+    def set_voltage(self, voltage_in_volts, current=None):
+        self.visa_write(f'SNDT {self.ch}, "VOLT {voltage_in_volts:.3f}"')
 
     @log_invoke_evt
-    def get_offset(self, current=None):
+    def get_voltage(self, current=None):
         return float(
-            self.visa_query(f':SNDT {self.ch}, "VOLT?"')
+            self.visa_query(f'SNDT {self.ch}, "VOLT?"')
         )
 
     @log_invoke_evt
     def output_on(self, current=None):
         """ICE method"""
-        self.visa_write(f':SNDT {self.ch}, "OPON"')
+        self.visa_write(f'SNDT {self.ch}, "OPON"')
 
     @log_invoke_evt
     def output_off(self, current=None):
         """ICE method"""
-        self.visa_write(f':SNDT {self.ch}, "OPOF"')
+        self.visa_write(f'SNDT {self.ch}, "OPOF"')
 
 
 def get_parser():
@@ -59,7 +59,7 @@ def load_dev(rack, args, logger=None):
         _id = f"{name}_CH{ch}"
 
         srs = DCSourceChannel(_id, ch, dev)
-        rack.load_device(name, srs)
+        rack.load_device(_id, srs)
 
 
 if __name__ == "__main__":
